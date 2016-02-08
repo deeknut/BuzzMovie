@@ -324,6 +324,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
 
         private final String mEmail;
         private final String mPassword;
+        private ProgressDialog progressDialog;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -359,18 +360,32 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (success && progressDialog.isShowing()) {
                 Log.d("Process", "Process finished.");
                 startActivity(appScreenIntent);
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                if(!success) {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                }
                 mPasswordView.requestFocus();
+                progressDialog.dismiss();
             }
         }
         @Override
         protected void onPreExecute(){
-            ProgressDialog progressDialog = ProgressDialog.show(
+            progressDialog = new ProgressDialog(BMLoginActivity.this);
+            progressDialog.setMessage("Logging in...");
+
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener(){
+                // Set a click listener for progress dialog cancel button
+                @Override
+                public void onClick(DialogInterface dialog, int which){
+                    // dismiss the progress dialog
+                    dialog.dismiss();
+                }
+            });
+            /*progressDialog = ProgressDialog.show(
                     BMLoginActivity.this,
                     "Logging in...",
                     "Please wait...",
@@ -384,8 +399,10 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
                         }
                     }
             );
-            progressDialog.setCancelable(true);
-            progressDialog.setCanceledOnTouchOutside(false);
+            */
+            progressDialog.show();
+            //progressDialog.setCancelable(true);
+            //progressDialog.setCanceledOnTouchOutside(false);
         }
         @Override
         protected void onCancelled() {
