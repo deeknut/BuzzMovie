@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.ProgressDialog;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -100,6 +102,16 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             }
         });
 
+        Button mCancelButton = (Button) findViewById(R.id.cancel_button);
+        mCancelButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mAuthTask != null) { //if we haven't logged in yet
+                    mAuthTask.onCancelled();
+                }
+                //TODO:Go back to welcome screen
+            }
+        });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
@@ -194,7 +206,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
+            //showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
 
@@ -352,7 +364,25 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
                 mPasswordView.requestFocus();
             }
         }
-
+        @Override
+        protected void onPreExecute(){
+            ProgressDialog progressDialog = ProgressDialog.show(
+                    BMLoginActivity.this,
+                    "Logging in...",
+                    "Please wait...",
+                    true,
+                    true,
+                    new DialogInterface.OnCancelListener(){
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            mAuthTask.onCancelled();
+                            finish();
+                        }
+                    }
+            );
+            progressDialog.setCancelable(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
         @Override
         protected void onCancelled() {
             mAuthTask = null;
