@@ -1,8 +1,8 @@
 package com.example.deeknut.buzzmovie;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class BMAppActivity extends AppCompatActivity {
 
@@ -13,7 +13,7 @@ public class BMAppActivity extends AppCompatActivity {
     }
 
     private void attemptLogout() {
-        Intent welcomeScreenIntent = new Intent(this, BMWelcomeActivity.class);
+        Intent welcomeScreenIntent = new Intent(this, BMLoginActivity.class);
         startActivity(welcomeScreenIntent);
     }
 }

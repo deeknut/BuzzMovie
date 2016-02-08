@@ -7,6 +7,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.app.ProgressDialog;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -73,10 +74,12 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    public Intent appScreenIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appScreenIntent = new Intent(this, BMAppActivity.class);
         setContentView(R.layout.activity_bmlogin);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -358,6 +361,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
 
             if (success) {
                 Log.d("Process", "Process finished.");
+                startActivity(appScreenIntent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
