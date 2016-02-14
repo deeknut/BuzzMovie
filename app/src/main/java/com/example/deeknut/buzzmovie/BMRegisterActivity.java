@@ -3,22 +3,22 @@ package com.example.deeknut.buzzmovie;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.app.ProgressDialog;
-import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.app.LoaderManager.LoaderCallbacks;
+
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,57 +31,49 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * A login screen that offers login via email/password.
+ * A register screen that offers register via email/password.
  */
-/*
-If someone requests login, you should check for the correct user name and password. For this first
- milestone, you should have a hard coded user with name "user" and password "pass" to check against.
- If the login matches user name / password then go to your application. Otherwise, notify of the bad
- login attempt.
-Canceling the login (press Cancel or going back a screen for example) will close out the login
-attempt , but no information is recorded and the application does not start up. Note here you are
-not explicitly required to have a cancel button, just a way to back out of the login.
-Once in the application, there should be a way to logout. After logging out, the application should
-return to the welcome page.
- */
-public class BMLoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class BMRegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    public static HashMap<String,String> userToPassMap = new HashMap<>();
+    public Intent appScreenIntent;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
+     * Keep track of the register task to ensure we can cancel it if requested.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "user:pass"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
+    private UserRegisterTask mAuthTask = null;
+    private File userInfo = new File("user_info.txt");
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mConfirmPasswordView;
     private View mProgressView;
-    private View mLoginFormView;
-    public Intent appScreenIntent;
+    private View mRegisterFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bmregister);
         appScreenIntent = new Intent(this, BMAppActivity.class);
-        setContentView(R.layout.activity_bmlogin);
-        // Set up the login form.
+
+        // Set up the register form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
@@ -89,38 +81,37 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                if (id == R.id.password || id == EditorInfo.IME_NULL) {
+                    attemptRegister();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        mConfirmPasswordView = (EditText) findViewById(R.id.confirm_password);
+        mConfirmPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View view) {
-                attemptLogin();
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.confirm_password || id == EditorInfo.IME_NULL) {
+                    attemptRegister();
+                    return true;
+                }
+                return false;
             }
         });
 
-        Button mRegisterButton = (Button) findViewById(R.id.register_button);
-        mRegisterButton.setOnClickListener(new OnClickListener() {
+
+        Button registerButton = (Button) findViewById(R.id.register_button);
+        registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToRegister();
+                attemptRegister();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-    }
-
-    private void goToRegister() {
-        Intent registerScreenIntent = new Intent(this, BMRegisterActivity.class);
-        startActivity(registerScreenIntent);
-        finish();
+        mRegisterFormView = findViewById(R.id.register_form);
+        mProgressView = findViewById(R.id.register_progress);
     }
 
     private void populateAutoComplete() {
@@ -166,13 +157,12 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         }
     }
 
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptRegister() {
         if (mAuthTask != null) {
             return;
         }
@@ -180,13 +170,22 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mConfirmPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String confirmPassword = mConfirmPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
+
+        // Check if passwords match
+        if (!password.equals(confirmPassword)) {
+            mPasswordView.setError(getString(R.string.error_non_matching_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -204,6 +203,10 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
+        } else if (userToPassMap.containsKey(email)) {
+            mEmailView.setError(getString(R.string.error_pre_existing_email));
+            focusView = mEmailView;
+            cancel = true;
         }
 
         if (cancel) {
@@ -213,21 +216,19 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            //showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
 
+            showProgress(true);
+            mAuthTask = new UserRegisterTask(email, password);
+            mAuthTask.execute((Void) null);
         }
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return true;//email.contains("@");
+            return email.contains("@") && email.contains(".") && !email.contains(" ");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() >= 4;
+        return password.length() > 8;
     }
 
     /**
@@ -241,12 +242,12 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+            mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRegisterFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -262,7 +263,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -303,7 +304,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(BMLoginActivity.this,
+                new ArrayAdapter<>(BMRegisterActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -324,13 +325,12 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
-        private ProgressDialog progressDialog;
 
-        UserLoginTask(String email, String password) {
+        UserRegisterTask(String email, String password) {
             mEmail = email;
             mPassword = password;
         }
@@ -343,10 +343,9 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             } catch (InterruptedException e) {
                 return false;
             }
+                userToPassMap.put(mEmail, mPassword);
 
-            //TODO seems unsafe, could get null pointers?
-            String p = BMRegisterActivity.userToPassMap.get(mEmail);
-            return p != null && p.equals(mPassword);
+            return true;
         }
 
         @Override
@@ -354,7 +353,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             mAuthTask = null;
             showProgress(false);
 
-            if (success && progressDialog.isShowing()) {
+            if (success) {
                 Log.d("Process", "Process finished.");
                 startActivity(appScreenIntent);
                 finish();
@@ -363,41 +362,9 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
                 }
                 mPasswordView.requestFocus();
-                progressDialog.dismiss();
             }
         }
-        @Override
-        protected void onPreExecute(){
-            progressDialog = new ProgressDialog(BMLoginActivity.this);
-            progressDialog.setMessage("Logging in...");
 
-            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener(){
-                // Set a click listener for progress dialog cancel button
-                @Override
-                public void onClick(DialogInterface dialog, int which){
-                    // dismiss the progress dialog
-                    dialog.dismiss();
-                }
-            });
-            /*progressDialog = ProgressDialog.show(
-                    BMLoginActivity.this,
-                    "Logging in...",
-                    "Please wait...",
-                    true,
-                    true,
-                    new DialogInterface.OnCancelListener(){
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            mAuthTask.onCancelled();
-                            finish();
-                        }
-                    }
-            );
-            */
-            progressDialog.show();
-            //progressDialog.setCancelable(true);
-            //progressDialog.setCanceledOnTouchOutside(false);
-        }
         @Override
         protected void onCancelled() {
             mAuthTask = null;

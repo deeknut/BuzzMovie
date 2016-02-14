@@ -22,7 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BMAppActivity"></activity>
+        <activity android:name=".BMAppActivity" />
+        <activity
+            android:name=".BMRegisterActivity"
+            android:label="@string/title_activity_register"></activity>
     </application>
 
 </manifest>
