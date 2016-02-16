@@ -8,6 +8,10 @@ import android.widget.Button;
 
 public class BMAppActivity extends AppCompatActivity {
 
+    /**
+     * {@inheritDoc}
+     * Called when app activity instance is started
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +25,9 @@ public class BMAppActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Attempts to logout, going back to the welcome screen
+     */
     private void attemptLogout() {
         Intent welcomeScreenIntent = new Intent(this, BMLoginActivity.class);
         startActivity(welcomeScreenIntent);
