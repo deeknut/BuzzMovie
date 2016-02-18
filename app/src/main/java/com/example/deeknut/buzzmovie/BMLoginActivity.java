@@ -57,6 +57,8 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
+    public static String currentUser;
+
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -214,6 +216,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             //showProgress(true);
+            currentUser = email;
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
 
@@ -344,7 +347,6 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
                 return false;
             }
 
-            //TODO seems unsafe, could get null pointers?
             String p = BMRegisterActivity.userToPassMap.get(mEmail);
             return p != null && p.equals(mPassword);
         }

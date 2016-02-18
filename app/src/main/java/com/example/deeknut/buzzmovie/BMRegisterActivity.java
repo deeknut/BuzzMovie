@@ -52,6 +52,8 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
      */
     private static final int REQUEST_READ_CONTACTS = 0;
     public static HashMap<String,String> userToPassMap = new HashMap<>();
+    public static HashMap<String,HashMap<String, String>> userInfoMap = new HashMap<>();
+
     public Intent appScreenIntent;
 
     /**
@@ -218,6 +220,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             // perform the user login attempt.
 
             showProgress(true);
+            BMLoginActivity.currentUser = email;
             mAuthTask = new UserRegisterTask(email, password);
             mAuthTask.execute((Void) null);
         }
@@ -335,6 +338,11 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             mPassword = password;
         }
 
+        /**
+         * Actually register the user
+         * @param params
+         * @return whether successful
+         */
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
@@ -348,6 +356,10 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             return true;
         }
 
+        /**
+         * Moves to main screen
+         * @param success
+         */
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;

@@ -12,6 +12,7 @@ public class BMAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmapp);
+
         Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -19,6 +20,20 @@ public class BMAppActivity extends AppCompatActivity {
                 attemptLogout();
             }
         });
+
+        Button editProfileButton = (Button) findViewById(R.id.button_edit_profile);
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptEditProfile();
+            }
+        });
+    }
+
+    private void attemptEditProfile() {
+        Intent editProfileIntent = new Intent(this, BMProfileActivity.class);
+        startActivity(editProfileIntent);
+        finish();
     }
 
     private void attemptLogout() {
