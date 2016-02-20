@@ -60,13 +60,6 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
     public static String currentUser;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "user:pass"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
@@ -78,6 +71,10 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
     private View mLoginFormView;
     public Intent appScreenIntent;
 
+    /**
+     * {@inheritDoc}
+     * Called when login activity instance is started
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,12 +116,18 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    /**
+     * Jumps to register view
+     */
     private void goToRegister() {
         Intent registerScreenIntent = new Intent(this, BMRegisterActivity.class);
         startActivity(registerScreenIntent);
         finish();
     }
 
+    /**
+     * Populates auto complete for email field
+     */
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -133,6 +136,9 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         getLoaderManager().initLoader(0, null, this);
     }
 
+    /**
+     * @return whether activity may request contacts or not
+     */
     private boolean mayRequestContacts() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
@@ -156,6 +162,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
     }
 
     /**
+     * {@inheritDoc}
      * Callback received when a permissions request has been completed.
      */
     @Override
@@ -223,17 +230,26 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         }
     }
 
+    /**
+     * @param email email string from login form
+     * @return whether email is valid
+     * Checks if email is valid
+     */
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return true;//email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() >= 4;
+        return email.contains("@") && email.contains(".") && !email.contains(" ");
     }
 
     /**
+     * @param password password string from login form
+     * @return whether password is valid
+     * Checks if password is valid
+     */
+    private boolean isPasswordValid(String password) {
+        return password.length() > 8;
+    }
+
+    /**
+     * @param show Whether to show progress view or not
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -269,6 +285,10 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * Creates loader for login activity
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -286,6 +306,10 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
+    /**
+     * {@inheritDoc}
+     * Stores email in auto complete after load
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
@@ -298,11 +322,18 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         addEmailsToAutoComplete(emails);
     }
 
+    /**
+     * {@inheritDoc}
+     * Called when loader is reset
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
+    /**
+     * @param emailAddressCollection collection of email addresses in autocomplete
+     * Show email addresses in autocomplete list
+    */
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -312,7 +343,9 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
         mEmailView.setAdapter(adapter);
     }
 
-
+    /**
+     * Interface for profile queries
+     */
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -338,6 +371,10 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             mPassword = password;
         }
 
+        /**
+         * {@inheritDoc}
+         * Runs check in background of task
+         */
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
@@ -351,6 +388,10 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             return p != null && p.equals(mPassword);
         }
 
+        /**
+         * {@inheritDoc}
+         * Goes to application view or shows error dialog based on credentials
+         */
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
@@ -368,6 +409,11 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
                 progressDialog.dismiss();
             }
         }
+
+        /**
+         * {@inheritDoc}
+         * Show progress dialog before task execution
+         */
         @Override
         protected void onPreExecute(){
             progressDialog = new ProgressDialog(BMLoginActivity.this);
@@ -400,6 +446,11 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             //progressDialog.setCancelable(true);
             //progressDialog.setCanceledOnTouchOutside(false);
         }
+
+        /**
+         * {@inheritDoc}
+         * Cancel task when cancel button clicked
+         */
         @Override
         protected void onCancelled() {
             mAuthTask = null;

@@ -69,6 +69,10 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
     private View mProgressView;
     private View mRegisterFormView;
 
+    /**
+     * {@inheritDoc}
+     * Called when register activity instance is started
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +120,9 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         mProgressView = findViewById(R.id.register_progress);
     }
 
+    /**
+     * Populates our auto complete for register fields
+     */
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -124,6 +131,9 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         getLoaderManager().initLoader(0, null, this);
     }
 
+    /**
+     * @return whether activity may request contacts or not
+     */
     private boolean mayRequestContacts() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
@@ -147,6 +157,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
     }
 
     /**
+     * {@inheritDoc}
      * Callback received when a permissions request has been completed.
      */
     @Override
@@ -160,9 +171,9 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to register the account specified by the form.
      * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * errors are presented and no actual register attempt is made.
      */
     private void attemptRegister() {
         if (mAuthTask != null) {
@@ -174,7 +185,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         mPasswordView.setError(null);
         mConfirmPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
+        // Store values at the time of the register attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
         String confirmPassword = mConfirmPasswordView.getText().toString();
@@ -212,12 +223,12 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
+            // There was an error; don't attempt register and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // perform the user register attempt.
 
             showProgress(true);
             BMLoginActivity.currentUser = email;
@@ -226,16 +237,27 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         }
     }
 
+    /**
+     * @param email email string to from form input
+     * @return whether email is valid
+     * Checks if email is valid
+     */
     private boolean isEmailValid(String email) {
             return email.contains("@") && email.contains(".") && !email.contains(" ");
     }
 
+    /**
+     * @param password password string from register form
+     * @return whether password is valid
+     * Checks if password is valid
+     */
     private boolean isPasswordValid(String password) {
         return password.length() > 8;
     }
 
     /**
-     * Shows the progress UI and hides the login form.
+     * @param show Whether to show progress view or not
+     * Shows the progress UI and hides the register form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
@@ -270,6 +292,10 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * Creates loader for register activity
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -287,6 +313,10 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
+    /**
+     * {@inheritDoc}
+     * Stores email in auto complete after load
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
@@ -299,11 +329,18 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         addEmailsToAutoComplete(emails);
     }
 
+    /**
+     * {@inheritDoc}
+     * Called when loader is reset
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
+    /**
+     * @param emailAddressCollection collection of email addresses in autocomplete
+     * Show email addresses in autocomplete list
+     */
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -313,7 +350,9 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         mEmailView.setAdapter(adapter);
     }
 
-
+    /**
+     * Interface for profile queries
+     */
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -325,7 +364,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous registration task used to authenticate
      * the user.
      */
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
@@ -338,10 +377,9 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             mPassword = password;
         }
 
-        /**
-         * Actually register the user
-         * @param params
-         * @return whether successful
+        /*
+         * {@inheritDoc}
+         * Runs in background during registration task
          */
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -356,9 +394,9 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             return true;
         }
 
-        /**
-         * Moves to main screen
-         * @param success
+        /*
+         * {@inheritDoc}
+         * Go to application screen or show error after finished task
          */
         @Override
         protected void onPostExecute(final Boolean success) {
@@ -377,6 +415,10 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             }
         }
 
+        /*
+         * {@inheritDoc}
+         * Handle cancelled register while loading
+         */
         @Override
         protected void onCancelled() {
             mAuthTask = null;
