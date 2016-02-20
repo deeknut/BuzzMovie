@@ -18,10 +18,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Search screen that allows users to search and filter for movies
+ */
 public class BMSearchActivity extends AppCompatActivity {
 
     private final String baseUrl ="http://api.rottentomatoes.com/api/public/v1.0/";
-    private final String apiParam = "apikey=yedukp76ffytfuy24zsqk7f5";
+    private final String apiParam = "?apikey=yedukp76ffytfuy24zsqk7f5";
     private RequestQueue queue;
     private ListView results;
     private EditText searchInput;
@@ -61,28 +64,42 @@ public class BMSearchActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Gets recent movies using helper method
      */
     private void attemptGetRecentMovies() {
-        this.showApiResults("lists/movies/opening.json?");
+        this.showApiResults("lists/movies/opening.json");
     }
 
     /**
-     *
+     * Gets recent dvds using helper method
      */
     private void attemptGetRecentDvds() {
-        this.showApiResults("lists/dvds/new_releases.json?");
+        this.showApiResults("lists/dvds/new_releases.json");
     }
 
     /**
-     *
+     * Search movies using helper method
+     * @param searchQuery query to search for
      */
     private void attemptSearch(String searchQuery) {
-        this.showApiResults("movies.json?q=" + searchQuery + "&");
+        this.showApiResults("movies.json", "&q=" + searchQuery);
     }
 
-    private void showApiResults(String partialUrl) {
-        String url = baseUrl + partialUrl + apiParam;
+    /**
+     * Search movies using helper method
+     * @param endpoint endpoint to grab Rotten Tomatoes API data from
+     */
+    private void showApiResults(String endpoint) {
+        this.showApiResults(endpoint, "");
+    }
+
+    /**
+     * Shows Rotten Tomato API results in results list view
+     * @param endpoint endpoint to grab Rotten Tomatoes API data from
+     * @param params parameters to Rotten Tomatoes API
+     */
+    private void showApiResults(String endpoint, String params) {
+        String url = baseUrl + endpoint + apiParam + params;
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest (url, null,
                     new Response.Listener<JSONObject>() {
@@ -91,12 +108,21 @@ public class BMSearchActivity extends AppCompatActivity {
                 try {
                     JSONArray movies = response.getJSONArray("movies");
                     int moviesSize = movies.length();
-                    String[] movieTitles = new String[moviesSize];
-                    for (int i = 0; i < moviesSize; i++) {
-                        movieTitles[i] = movies.getJSONObject(i).getString("title");
+                    ArrayAdapter adapter;
+                    if (moviesSize > 0) {
+                        String[] movieTitles = new String[moviesSize];
+                        for (int i = 0; i < moviesSize; i++) {
+                            movieTitles[i] = movies.getJSONObject(i).getString("title");
+                        }
+                        adapter = new ArrayAdapter<>(BMSearchActivity.this,
+                                android.R.layout.simple_list_item_1, movieTitles);
+                    } else {
+                        String[] noMovieTitles = {"No movies found"};
+                        adapter = new ArrayAdapter<>(BMSearchActivity.this,
+                                android.R.layout.simple_list_item_1, noMovieTitles);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(BMSearchActivity.this,
-                            android.R.layout.simple_list_item_1, movieTitles);
+
+                    // save results to results listView
                     results.setAdapter(adapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
