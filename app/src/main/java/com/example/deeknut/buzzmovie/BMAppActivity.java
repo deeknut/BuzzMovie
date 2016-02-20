@@ -32,11 +32,31 @@ public class BMAppActivity extends AppCompatActivity {
                 attemptEditProfile();
             }
         });
+
+        Button searchButton = (Button) findViewById(R.id.button_search);
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptGoToSearchPage();
+            }
+        });
     }
 
+    /**
+     * Attempts to go to edit profile screen
+     */
     private void attemptEditProfile() {
         Intent editProfileIntent = new Intent(this, BMProfileActivity.class);
         startActivity(editProfileIntent);
+        finish();
+    }
+
+    /**
+     * Attempts to go to search screen
+     */
+    private void attemptGoToSearchPage() {
+        Intent searchIntent = new Intent(this, BMProfileActivity.class);
+        startActivity(searchIntent);
         finish();
     }
 

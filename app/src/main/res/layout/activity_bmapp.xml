@@ -32,7 +32,17 @@
         android:layout_height="wrap_content"
         android:text="Edit Profile"
         android:id="@+id/button_edit_profile"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/app_header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:id="@+id/button_search"
+        android:layout_below="@+id/button_edit_profile"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

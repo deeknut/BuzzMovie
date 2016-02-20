@@ -29,7 +29,8 @@
         <activity
             android:name=".BMProfileActivity"
             android:label="@string/title_activity_bmprofile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".BMSearchActivity"></activity>
     </application>
 
 </manifest>
