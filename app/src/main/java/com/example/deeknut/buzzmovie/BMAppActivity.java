@@ -34,7 +34,7 @@ public class BMAppActivity extends AppCompatActivity {
         });
 
         Button searchButton = (Button) findViewById(R.id.button_search);
-        editProfileButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptGoToSearchPage();
@@ -55,7 +55,7 @@ public class BMAppActivity extends AppCompatActivity {
      * Attempts to go to search screen
      */
     private void attemptGoToSearchPage() {
-        Intent searchIntent = new Intent(this, BMProfileActivity.class);
+        Intent searchIntent = new Intent(this, BMSearchActivity.class);
         startActivity(searchIntent);
         finish();
     }

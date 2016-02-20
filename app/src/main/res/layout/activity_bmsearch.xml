@@ -42,22 +42,32 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:weightSum="3">
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText_search"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:text="Search for a movie"
-                android:textColor="#999999" />
+                android:layout_weight="2"
+                android:focusable="true"
+                android:singleLine="true"
+                android:hint="Search for a movie"
+                android:inputType="text"
+                android:focusableInTouchMode="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search"
+                android:id="@+id/button_search"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/listView" />
+            android:id="@+id/results_listView" />
 
     </LinearLayout>
 </RelativeLayout>
