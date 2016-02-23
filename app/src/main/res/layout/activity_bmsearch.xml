@@ -7,14 +7,21 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.deeknut.buzzmovie.BMSearchActivity">
+    tools:context="com.example.deeknut.buzzmovie.BMSearchActivity"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:contextClickable="true"
+    android:clickable="true">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/mainLayout"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -54,20 +61,28 @@
                 android:singleLine="true"
                 android:hint="Search for a movie"
                 android:inputType="text"
-                android:focusableInTouchMode="true" />
+                android:focusableInTouchMode="true"
+                android:contextClickable="false"
+                android:enabled="true" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Search"
                 android:id="@+id/button_search"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
         </LinearLayout>
 
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/results_listView" />
+            android:id="@+id/results_listView"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:scrollingCache="false"
+            android:smoothScrollbar="true" />
 
     </LinearLayout>
 </RelativeLayout>

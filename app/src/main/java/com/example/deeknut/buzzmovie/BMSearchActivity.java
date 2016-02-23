@@ -2,7 +2,9 @@ package com.example.deeknut.buzzmovie;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,6 +101,8 @@ public class BMSearchActivity extends AppCompatActivity {
      * @param params parameters to Rotten Tomatoes API
      */
     private void showApiResults(String endpoint, String params) {
+        this.removeSearchInputFocus();
+
         String url = baseUrl + endpoint + apiParam + params;
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest (url, null,
@@ -137,6 +141,14 @@ public class BMSearchActivity extends AppCompatActivity {
         });
 
         queue.add(jsonRequest);
+    }
+
+    private void removeSearchInputFocus() {
+        // close keyboard
+        searchInput.setEnabled(false);
+        searchInput.setEnabled(true);
+        // remove focus
+        searchInput.clearFocus();
     }
 }
 
