@@ -33,7 +33,8 @@
             android:name=".BMProfileActivity"
             android:label="@string/title_activity_bmprofile"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BMSearchActivity"></activity>
+        <activity android:name=".BMSearchActivity" />
+        <activity android:name=".MovieActivity"></activity>
     </application>
 
 </manifest>
