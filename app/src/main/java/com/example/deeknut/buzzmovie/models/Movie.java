@@ -16,7 +16,7 @@ public class Movie implements Serializable {
         this.rating = rating;
         this.title = title;
         this.description = description;
-        this.counter = 1;
+        this.counter = rating > 0 ? 1 : 0;
     }
     public String getDescription() {
         return description;
@@ -31,8 +31,7 @@ public class Movie implements Serializable {
     }
 
     public void updateRating(double rating) {
-        this.rating = rating;
-        counter++;
+        this.rating = (rating + this.rating * counter)/++counter;
     }
 
     public String toString() {

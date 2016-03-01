@@ -1,8 +1,12 @@
 package com.example.deeknut.buzzmovie;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -15,24 +19,39 @@ public class MovieActivity extends Activity implements RatingBar.OnRatingBarChan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+
         movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
         Log.d("MovieActivity", movie.toString());
         TextView title = (TextView)findViewById(R.id.title);
         title.setText(movie.getTitle());
         TextView desc = (TextView)findViewById(R.id.desc);
         desc.setText(movie.getDescription());
-        rating = (RatingBar)findViewById(R.id.rating);
-        Log.d("Indicator", "" + rating.isIndicator());
-        rating.setIsIndicator(false);
-        rating.setRating((float) movie.getRating());
 
+        rating = (RatingBar)findViewById(R.id.rating);
+        rating.setRating((float) movie.getRating());
         rating.setOnRatingBarChangeListener(this);
+
+        Button backButton = (Button) findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBackToSearch();
+            }
+        });
     }
+
+    private void goBackToSearch() {
+        Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
+        startActivity(searchScreenIntent);
+        finish();
+    }
+
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         if(fromUser) {
             Log.d("tag", "" + rating);
             movie.updateRating(rating);
+            BMSearchActivity.prevMovies.put(movie.getTitle(), movie);
             this.rating.setRating((float) movie.getRating());
         }
     }

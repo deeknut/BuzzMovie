@@ -36,7 +36,7 @@ public class BMSearchActivity extends AppCompatActivity {
     private EditText searchInput;
     Movie[] movieTitles;
     Intent movieScreenIntent;
-    private static HashMap<String, Movie> prevMovies;
+    public static HashMap<String, Movie> prevMovies = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,6 @@ public class BMSearchActivity extends AppCompatActivity {
                 attemptSearch(searchInput.getText().toString());
             }
         });
-        prevMovies = new HashMap<>();
     }
 
     /**
@@ -133,7 +132,7 @@ public class BMSearchActivity extends AppCompatActivity {
                                        movie.getJSONObject("ratings").getInt("critics_score") / 20.0));
 
                             } else {
-                                Log.d("SLDJFLSK", "SLDFJSLKDF");
+                                Log.d("SLDJFLSK", ""+prevMovies.get(movie.getString("title")).getRating());
                             }
                             movieTitles[i] = prevMovies.get(movie.getString("title"));
                         }
