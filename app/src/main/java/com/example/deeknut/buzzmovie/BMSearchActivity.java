@@ -102,6 +102,7 @@ public class BMSearchActivity extends AppCompatActivity {
      */
     private void showApiResults(String endpoint, String params) {
         this.removeSearchInputFocus();
+        params = params.replaceAll(" ", "%20");
 
         String url = baseUrl + endpoint + apiParam + params;
 
