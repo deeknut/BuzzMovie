@@ -1,10 +1,11 @@
 package com.example.deeknut.buzzmovie;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +16,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.deeknut.buzzmovie.models.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * Search screen that allows users to search and filter for movies
@@ -30,11 +34,15 @@ public class BMSearchActivity extends AppCompatActivity {
     private RequestQueue queue;
     private ListView results;
     private EditText searchInput;
+    Movie[] movieTitles;
+    Intent movieScreenIntent;
+    private static HashMap<String, Movie> prevMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmsearch);
+        movieScreenIntent = new Intent(this, MovieActivity.class);
 
         queue = Volley.newRequestQueue(this);
         results = (ListView) findViewById(R.id.results_listView);
@@ -63,6 +71,7 @@ public class BMSearchActivity extends AppCompatActivity {
                 attemptSearch(searchInput.getText().toString());
             }
         });
+        prevMovies = new HashMap<>();
     }
 
     /**
@@ -115,9 +124,18 @@ public class BMSearchActivity extends AppCompatActivity {
                     int moviesSize = movies.length();
                     ArrayAdapter adapter;
                     if (moviesSize > 0) {
-                        String[] movieTitles = new String[moviesSize];
+                        movieTitles = new Movie[moviesSize];
                         for (int i = 0; i < moviesSize; i++) {
-                            movieTitles[i] = movies.getJSONObject(i).getString("title");
+                            JSONObject movie = movies.getJSONObject(i);
+                            if(prevMovies.get(movie.getString("title")) == null) {
+                               prevMovies.put(movie.getString("title"), new Movie(movie.getString("title"),
+                                       movie.getString("synopsis"),
+                                       movie.getJSONObject("ratings").getInt("critics_score") / 20.0));
+
+                            } else {
+                                Log.d("SLDJFLSK", "SLDFJSLKDF");
+                            }
+                            movieTitles[i] = prevMovies.get(movie.getString("title"));
                         }
                         adapter = new ArrayAdapter<>(BMSearchActivity.this,
                                 android.R.layout.simple_list_item_1, movieTitles);
@@ -129,6 +147,14 @@ public class BMSearchActivity extends AppCompatActivity {
 
                     // save results to results listView
                     results.setAdapter(adapter);
+                    results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            movieScreenIntent.putExtra("DAT_MOVIE_DOE", movieTitles[position]);
+                            startActivity(movieScreenIntent);
+                            //Intent intent = new Intent(new MovieActivity(movieTitles[position]));
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
