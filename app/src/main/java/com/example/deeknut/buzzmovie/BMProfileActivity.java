@@ -2,17 +2,11 @@ package com.example.deeknut.buzzmovie;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
@@ -73,7 +67,9 @@ public class BMProfileActivity extends AppCompatActivity {
             }
         });
     }
-
+    /*
+    Saves user information.
+     */
     private void saveUserInfo() {
         //Add User's Info To Map
         BMRegisterActivity.userInfoMap.get(curUser)
@@ -82,7 +78,9 @@ public class BMProfileActivity extends AppCompatActivity {
                 .put("Interests", mInterests.getText().toString());
 
     }
-
+    /*
+    Returns to original application.
+     */
     private void returnToAppActivity() {
         Intent appScreenIntent = new Intent(this, BMAppActivity.class);
         startActivity(appScreenIntent);

@@ -168,7 +168,9 @@ public class BMSearchActivity extends AppCompatActivity {
 
         queue.add(jsonRequest);
     }
-
+    /*
+    Closing actions after search is implemented.
+     */
     private void removeSearchInputFocus() {
         // close keyboard
         searchInput.setEnabled(false);
