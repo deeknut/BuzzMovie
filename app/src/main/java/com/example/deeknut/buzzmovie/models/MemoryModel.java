@@ -18,13 +18,17 @@ import java.util.Map;
  */
 public class MemoryModel implements Model {
 
-    /** the collection of users, movies, and recs, keyed by name
+    /** The collection of users, movies, and recs, keyed by name.
      * These are our "database" for now. Should be removed later
      * once the database functionality is added.
      * Currently our structurers.*/
     private Map<String, User> users;
     private Map<String, Movie> movies;
     private Map<String, Recommendation> recommendations;
+    /**
+    The below fields will permanently stay as part of the MemoryModel.
+     Once we switch to database, these will NOT get replaced.
+     */
     private User currUser;
     private static Model singleton;
     /**
