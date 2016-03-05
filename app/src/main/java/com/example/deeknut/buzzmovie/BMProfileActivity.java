@@ -18,7 +18,10 @@ public class BMProfileActivity extends AppCompatActivity {
     private EditText mMajor;
     private Button   mSave;
     private String curUser;
-
+    /**
+     * {@inheritDoc}
+     * Called when login activity instance is started
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +70,7 @@ public class BMProfileActivity extends AppCompatActivity {
             }
         });
     }
-    /*
+    /**
     Saves user information.
      */
     private void saveUserInfo() {
@@ -78,7 +81,7 @@ public class BMProfileActivity extends AppCompatActivity {
                 .put("Interests", mInterests.getText().toString());
 
     }
-    /*
+    /**
     Returns to original application.
      */
     private void returnToAppActivity() {

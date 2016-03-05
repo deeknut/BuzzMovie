@@ -14,6 +14,10 @@ import com.example.deeknut.buzzmovie.models.Movie;
 public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarChangeListener {
     Movie movie;
     RatingBar rating;
+    /**
+     * {@inheritDoc}
+     * Called when login activity instance is started
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +51,18 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
             }
         });;
     }
-
+    /**
+    Goes back to movie search screen.
+     */
     private void goBackToSearch() {
         Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
         startActivity(searchScreenIntent);
         finish();
     }
-
+    /**
+     * {@inheritDoc}
+     * Called when rating is changed for a ratingBar.
+     */
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         if(fromUser) {
@@ -63,7 +72,9 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
             this.rating.setRating((float) movie.getRating());
         }
     }
-
+    /**
+    Goes to recommendation update screen when recommendation button is clicked.
+     */
     private void onRecClicked() {
         Intent updateRecIntent = new Intent(this, BMRecActivity.class);
         updateRecIntent.putExtra("DAT_MOVIE_DOE", movie);

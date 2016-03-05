@@ -371,7 +371,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             mPassword = password;
         }
 
-        /*
+        /**
          * {@inheritDoc}
          * Runs in background during registration task
          */
@@ -388,7 +388,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             return true;
         }
 
-        /*
+        /**
          * {@inheritDoc}
          * Go to application screen or show error after finished task
          */
@@ -409,7 +409,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          * Handle cancelled register while loading
          */

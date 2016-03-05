@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.deeknut.buzzmovie.models.Recommendation;
 
@@ -38,18 +39,18 @@ public class BMRecommendationsActivity extends AppCompatActivity {
         ArrayAdapter<String> majorsAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, majors);
         majorDropdown.setAdapter(majorsAdapter);
-        updateRecommendations(getRecommendations(null));
+        updateRecommendations(getRecommendations("All Majors"));
         majorDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Log.d("yo", selectedItemView.toString());
-                updateRecommendations(getRecommendations(selectedItemView.toString()));
+                updateRecommendations(getRecommendations(((TextView) selectedItemView).getText().toString()));
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                Log.d("no", "dsfa");
-                updateRecommendations(getRecommendations(null));
+                //Log.d("no", "dsfa");
+                //updateRecommendations(getRecommendations(null));
             }
         });
     }
@@ -66,7 +67,7 @@ public class BMRecommendationsActivity extends AppCompatActivity {
         List<Recommendation> list = new ArrayList<>();
         for(Recommendation rec : prevRecs.values()) {
             Log.d("rec", BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major"));
-            if (major == null || major.equals("All Majors") ||
+            if (major.equals("All Majors") ||
                 BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").trim().equals(major)) {
                 list.add(rec);
             }

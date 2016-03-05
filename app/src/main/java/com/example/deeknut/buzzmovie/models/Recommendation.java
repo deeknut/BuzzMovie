@@ -9,9 +9,9 @@ public class Recommendation {
     private String userEmail;
     private String movieTitle;
 
-    /*
+    /**
     Constructor for movie.
-    @param title of movie
+    @param movieTitle title of movie
     @param description of movie
     @param rating of movie
      */
@@ -21,31 +21,31 @@ public class Recommendation {
         this.movieTitle = movieTitle;
         this.description = description;
     }
-    /*
+    /**
     @return description of movie.
      */
     public String getDescription() {
         return description;
     }
-    /*
+    /**
     @return title of movie.
      */
     public String getTitle() {
         return movieTitle;
     }
-    /*
+    /**
     @return rating of movie.
      */
     public double getRating() {
         return rating;
     }
-    /*
+    /**
     @param rating to update movie with.
      */
     public void updateRating(double rating) {
         this.rating = rating;
     }
-    /*
+    /**
     @return string representation of movie.
      */
     public String toString() {
@@ -53,6 +53,10 @@ public class Recommendation {
         return movieTitle + ", Rated by: " + userEmail + ", Rating: "+ rating;
     }
 
+    /**
+     * Returns email for current user.
+     * @return user email
+     */
     public String getUserEmail() {
         return userEmail;
     }

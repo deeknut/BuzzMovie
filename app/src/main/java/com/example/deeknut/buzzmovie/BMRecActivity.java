@@ -19,8 +19,11 @@ public class BMRecActivity extends AppCompatActivity {
     TextView title;
     TextView desc;
 
-    //HashMap<String, Recommendation> recommendations;
     @Override
+    /**
+     * {@inheritDoc}
+     * Called when login activity instance is started
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rec);
@@ -45,12 +48,14 @@ public class BMRecActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goBackToSearch();
+                goBackToMovie();
             }
         });
     }
-
-    private void goBackToSearch() {
+    /**
+    Goes back to movie view.
+     **/
+    private void goBackToMovie() {
         //Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
         //startActivity(searchScreenIntent);
         Recommendation rec = new Recommendation(BMLoginActivity.currentUser,title.getText().toString(),

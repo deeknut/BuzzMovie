@@ -39,17 +39,6 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-/*
-If someone requests login, you should check for the correct user name and password. For this first
- milestone, you should have a hard coded user with name "user" and password "pass" to check against.
- If the login matches user name / password then go to your application. Otherwise, notify of the bad
- login attempt.
-Canceling the login (press Cancel or going back a screen for example) will close out the login
-attempt , but no information is recorded and the application does not start up. Note here you are
-not explicitly required to have a cancel button, just a way to back out of the login.
-Once in the application, there should be a way to logout. After logging out, the application should
-return to the welcome page.
- */
 public class BMLoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
