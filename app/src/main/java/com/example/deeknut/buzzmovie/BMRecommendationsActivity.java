@@ -1,23 +1,19 @@
 package com.example.deeknut.buzzmovie;
 
 import android.content.Intent;
-import android.database.DataSetObserver;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import com.example.deeknut.buzzmovie.models.Recommendation;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -36,11 +32,11 @@ public class BMRecommendationsActivity extends AppCompatActivity {
         recList = (ListView) findViewById(R.id.recommendations);
         Spinner majorDropdown = (Spinner) findViewById(R.id.major_dropdown);
         // TODO: change hard coded array with real data
-        String[] majors = {"Computer Science", "Business", "Memes"};
+        String[] majors = {"CS", "Business", "Memes"};
         ArrayAdapter<String> majorsAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, majors);
         majorDropdown.setAdapter(majorsAdapter);
-        updateRecommendations(getRecommendations(""));
+        updateRecommendations(getRecommendations(majorDropdown.getSelectedItem().toString()));
     }
 
     private void updateRecommendations(Recommendation[] recs) {
@@ -51,10 +47,24 @@ public class BMRecommendationsActivity extends AppCompatActivity {
 
     private Recommendation[] getRecommendations(String major) {
         // TODO: change janky hard coded stuff with real data
-        Recommendation[] r = new Recommendation[prevRecs.size()];
-        int i = 0;
-        for (Recommendation rec : prevRecs.values()) {
-            r[i++] = rec;
+
+        List<Recommendation> list = new ArrayList<>();
+        for(Recommendation rec : prevRecs.values()) {
+            Log.d("MAJOR", BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major"));
+            Log.d("EQUALS", "" + BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").trim().equals(major));
+            if(BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").trim().equals(major)) {
+                list.add(rec);
+            }
+        }
+        Collections.sort(list, new Comparator<Recommendation>() {
+            @Override
+            public int compare(Recommendation r1, Recommendation r2) {
+                return (r1.getRating() - r2.getRating()) < 0 ? 1 : 0;
+            }
+        });
+        Recommendation[] r = new Recommendation[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            r[i] = list.get(i);
         }
         return r;
     }
