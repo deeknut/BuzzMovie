@@ -34,7 +34,8 @@
             android:label="@string/title_activity_bmprofile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BMSearchActivity" />
-        <activity android:name=".MovieActivity"></activity>
+        <activity android:name=".MovieActivity" />
+        <activity android:name=".BMRecommendationsActivity"></activity>
     </application>
 
 </manifest>

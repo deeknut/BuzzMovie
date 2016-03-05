@@ -40,6 +40,14 @@ public class BMAppActivity extends AppCompatActivity {
                 attemptGoToSearchPage();
             }
         });
+
+        Button recButton = (Button) findViewById(R.id.button_rec);
+        recButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptGoToRecPage();
+            }
+        });
     }
 
     /**
@@ -67,5 +75,13 @@ public class BMAppActivity extends AppCompatActivity {
         Intent welcomeScreenIntent = new Intent(this, BMLoginActivity.class);
         startActivity(welcomeScreenIntent);
         finish();
+    }
+
+    /**
+     * Attempts to go to recommendation page
+     */
+    private void attemptGoToRecPage() {
+        Intent recActivityIntent = new Intent(this, BMRecommendationsActivity.class);
+        startActivity(recActivityIntent);
     }
 }
