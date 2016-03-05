@@ -43,6 +43,9 @@ public class BMRecActivity extends AppCompatActivity {
         rating.setIsIndicator(!isEditable);
 
         Button saveButton = (Button) findViewById(R.id.save_button);
+        if(!isEditable) {
+            saveButton.setText("Back");
+        }
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,8 +57,6 @@ public class BMRecActivity extends AppCompatActivity {
     Goes back to movie view.
      **/
     private void goBackToMovie() {
-        //Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
-        //startActivity(searchScreenIntent);
         Recommendation rec = new Recommendation(BMLoginActivity.currentUser,title.getText().toString(),
                 desc.getText().toString(), rating.getRating());
         Log.d("TITLE", rec.getTitle());

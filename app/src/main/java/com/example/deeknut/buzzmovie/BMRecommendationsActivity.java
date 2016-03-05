@@ -24,14 +24,17 @@ import java.util.List;
  */
 public class BMRecommendationsActivity extends AppCompatActivity {
     private ListView recList;
-    Recommendation[] recommendations;
-    Intent recScreenIntent;
+    Recommendation[] r;
     public static HashMap<String, Recommendation> prevRecs = new HashMap<>();
+    private Intent recIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmrecommendations);
+
+        recIntent = new Intent(this, BMRecActivity.class);
+
         recList = (ListView) findViewById(R.id.recommendations);
         Spinner majorDropdown = (Spinner) findViewById(R.id.major_dropdown);
         // TODO: change hard coded array with real data
@@ -53,6 +56,15 @@ public class BMRecommendationsActivity extends AppCompatActivity {
                 //updateRecommendations(getRecommendations(null));
             }
         });
+        recList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                recIntent.putExtra("DAT_MOVIE_DOE",
+                        BMSearchActivity.prevMovies.get(r[position].getTitle()));
+                recIntent.putExtra("isEditable", false);
+                startActivity(recIntent);
+            }
+        });
     }
 
     private void updateRecommendations(Recommendation[] recs) {
@@ -66,9 +78,9 @@ public class BMRecommendationsActivity extends AppCompatActivity {
 
         List<Recommendation> list = new ArrayList<>();
         for(Recommendation rec : prevRecs.values()) {
-            Log.d("rec", BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major"));
             if (major.equals("All Majors") ||
-                BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").trim().equals(major)) {
+                BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major") != null &&
+                BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").equals(major)) {
                 list.add(rec);
             }
         }
@@ -78,7 +90,7 @@ public class BMRecommendationsActivity extends AppCompatActivity {
                 return (r1.getRating() - r2.getRating()) < 0 ? 1 : 0;
             }
         });
-        Recommendation[] r = new Recommendation[list.size()];
+        r = new Recommendation[list.size()];
         for (int i = 0; i < list.size(); i++) {
             r[i] = list.get(i);
         }
