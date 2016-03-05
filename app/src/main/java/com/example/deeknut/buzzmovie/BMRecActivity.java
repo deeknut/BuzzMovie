@@ -11,6 +11,7 @@ import com.example.deeknut.buzzmovie.models.MemoryModel;
 import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.Movie;
 import com.example.deeknut.buzzmovie.models.Recommendation;
+import com.example.deeknut.buzzmovie.models.User;
 
 
 public class BMRecActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class BMRecActivity extends AppCompatActivity {
     private TextView desc;
     private Model model;
     private Movie movie;
+    private User user;
 
     @Override
     /**
@@ -32,8 +34,9 @@ public class BMRecActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rec);
         model = MemoryModel.getInstance();
         movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
+        user = (User) getIntent().getSerializableExtra("DAT_USER_DOE");
         Boolean isEditable = getIntent().getBooleanExtra("isEditable", false);
-        recommendation = model.getRecommendationByUserAndMovie(model.getCurrUser(), movie);
+        recommendation = model.getRecommendationByUserAndMovie(user, movie);
         title = (TextView)findViewById(R.id.title);
         desc = (TextView)findViewById(R.id.desc);
         rating = (RatingBar)findViewById(R.id.ratingBar);
@@ -61,7 +64,7 @@ public class BMRecActivity extends AppCompatActivity {
      **/
     private void goBackToMovie() {
         //Log.d("TITLE", rec.getTitle());
-        model.addRecommendation(model.getCurrUser().getEmail(), movie.getMovieID(), movie.getTitle(),
+        model.addRecommendation(user.getEmail(), movie.getMovieID(), movie.getTitle(),
                 desc.getText().toString(), rating.getRating());
         finish();
     }

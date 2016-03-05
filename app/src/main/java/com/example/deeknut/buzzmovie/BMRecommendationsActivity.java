@@ -60,6 +60,7 @@ public class BMRecommendationsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 recIntent.putExtra("DAT_MOVIE_DOE",
                         model.getMovieById(r[position].getMovieID()));
+                recIntent.putExtra("DAT_USER_DOE", model.getUserByEmail(r[position].getUserEmail()));
                 recIntent.putExtra("isEditable", false);
                 startActivity(recIntent);
             }

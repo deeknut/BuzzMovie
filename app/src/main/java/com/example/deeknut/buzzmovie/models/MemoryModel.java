@@ -123,8 +123,12 @@ public class MemoryModel implements Model {
     @Override
     public void setCurrUser(String email, String pass) {
 
-        currUser = new User(email, pass);
-        users.put(email, currUser);
+        if(isUser(email)) {
+            currUser = users.get(email);
+        } else {
+            currUser = new User(email, pass);
+            users.put(email, currUser);
+        }
     }
 
     public static Model getInstance() {

@@ -1,9 +1,11 @@
 package com.example.deeknut.buzzmovie.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Jay on 2/29/16.
  */
-public class User {
+public class User implements Serializable {
     private String email;
     private String pass;
     private String firstName;

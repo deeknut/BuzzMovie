@@ -18,7 +18,6 @@ public class BMProfileActivity extends AppCompatActivity {
     private EditText mInterests;
     private EditText mMajor;
     private Button   mSave;
-    private String curUser;
     private Model model;
     /**
      * {@inheritDoc}
@@ -51,8 +50,7 @@ public class BMProfileActivity extends AppCompatActivity {
         mSave  = (Button) findViewById(R.id.profile_save);
 
         //SET CONTENTS OF BOXES IN PROFILE ACTIVITY
-        curUser = BMLoginActivity.currentUser;
-        mUsername.setText(curUser);
+        mUsername.setText(model.getCurrUser().getEmail());
         mPassword.setText(model.getCurrUser().getPass());
 
         /*if (!BMRegisterActivity.userInfoMap.containsKey(curUser)) {

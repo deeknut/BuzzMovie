@@ -81,6 +81,8 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
     private void onRecClicked() {
         Intent updateRecIntent = new Intent(this, BMRecActivity.class);
         updateRecIntent.putExtra("DAT_MOVIE_DOE", movie);
+        updateRecIntent.putExtra("DAT_USER_DOE", model.getCurrUser());
+        Log.d("DAT_USER_DOE", model.getCurrUser().toString());
         updateRecIntent.putExtra("isEditable", true);
         startActivity(updateRecIntent);
     }

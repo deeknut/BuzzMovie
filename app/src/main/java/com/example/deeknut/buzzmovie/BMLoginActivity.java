@@ -390,6 +390,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
 
             if (success && progressDialog.isShowing()) {
                 Log.d("Process", "Process finished.");
+                model.setCurrUser(mEmail, mPassword);
                 startActivity(appScreenIntent);
                 finish();
             } else {
