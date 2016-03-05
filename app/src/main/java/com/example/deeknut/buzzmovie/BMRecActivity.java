@@ -29,20 +29,18 @@ public class BMRecActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rec);
 
         Movie movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
-        System.out.println("ALSKDJFLKSDJF" + movie);
+        Boolean isEditable = getIntent().getBooleanExtra("isEditable", false);
         recommendation = BMRecommendationsActivity.prevRecs.get(movie.getTitle());
         title = (TextView)findViewById(R.id.title);
         desc = (TextView)findViewById(R.id.desc);
         rating = (RatingBar)findViewById(R.id.ratingBar);
         title.setText(movie.getTitle());
         if(recommendation != null) {
-            Log.d("RecommendationActivity", recommendation.toString());
             desc.setText(recommendation.getDescription());
             rating.setRating((float) recommendation.getRating());
-            //rating.setOnRatingBarChangeListener(this);
         }
-
-
+        desc.setEnabled(isEditable);
+        rating.setIsIndicator(!isEditable);
 
         Button saveButton = (Button) findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
