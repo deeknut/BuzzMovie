@@ -40,7 +40,12 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
 
         Button recButton = (Button) findViewById(R.id.rec_button);
         //JAVA 8
-        recButton.setOnClickListener(e -> onRecClicked());
+        recButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRecClicked();
+            }
+        });;
     }
 
     private void goBackToSearch() {

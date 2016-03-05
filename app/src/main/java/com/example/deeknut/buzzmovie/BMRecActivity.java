@@ -1,6 +1,5 @@
-package com.example.deeknut.buzzmovie
+package com.example.deeknut.buzzmovie;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,6 +26,7 @@ public class BMRecActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rec);
 
         Movie movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
+        System.out.println("ALSKDJFLKSDJF" + movie);
         recommendation = BMRecommendationsActivity.prevRecs.get(movie.getTitle());
         title = (TextView)findViewById(R.id.title);
         desc = (TextView)findViewById(R.id.desc);
@@ -36,31 +36,27 @@ public class BMRecActivity extends AppCompatActivity {
             Log.d("RecommendationActivity", recommendation.toString());
             desc.setText(recommendation.getDescription());
             rating.setRating((float) recommendation.getRating());
-            rating.setOnRatingBarChangeListener(this);
+            //rating.setOnRatingBarChangeListener(this);
         }
 
 
 
         Button saveButton = (Button) findViewById(R.id.save_button);
-        saveButton.setOnClickListener(e -> goBackToSearch());
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBackToSearch();
+            }
+        });
     }
 
     private void goBackToSearch() {
         //Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
         //startActivity(searchScreenIntent);
-        Recommendation rec = new Recommendation(title.getText().toString(),BMLoginActivity.currentUser,
+        Recommendation rec = new Recommendation(BMLoginActivity.currentUser,title.getText().toString(),
                 desc.getText().toString(), rating.getRating());
+        Log.d("TITLE", rec.getTitle());
         BMRecommendationsActivity.prevRecs.put(rec.getTitle(), rec);
         finish();
-    }
-
-    @Override
-    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-        if(fromUser) {
-            Log.d("tag", "" + rating);
-            recommendation.updateRating(rating);
-            BMRecommendationsActivity.prevRecs.put(recommendation.getTitle(), recommendation);
-            this.rating.setRating((float) recommendation.getRating());
-        }
     }
 }
