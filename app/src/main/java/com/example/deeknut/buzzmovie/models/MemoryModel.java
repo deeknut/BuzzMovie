@@ -7,7 +7,6 @@ package com.example.deeknut.buzzmovie.models;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,9 +17,11 @@ import java.util.Map;
  * Singleton class that serves as an interfacer for all stored data.
  */
 public class MemoryModel implements Model {
-    private final String TAG = "MemoryModel";
 
-    /** the collection of users, movies, and recs, keyed by name */
+    /** the collection of users, movies, and recs, keyed by name
+     * These are our "database" for now. Should be removed later
+     * once the database functionality is added.
+     * Currently our structurers.*/
     private Map<String, User> users;
     private Map<String, Movie> movies;
     private Map<String, Recommendation> recommendations;
@@ -58,11 +59,6 @@ public class MemoryModel implements Model {
         return users.get(email);
     }
     @Override
-    public void registerUser(String email, String pass) {
-        //TODO: Replace with DB Query
-        users.put(email, new User(email, pass));
-    }
-    @Override
     public Movie getMovieById(final String id) {
         //TODO: Replace with DB Query
         return movies.get(id);
@@ -75,6 +71,7 @@ public class MemoryModel implements Model {
 
     @Override
     public List<Recommendation> getRecommendationsByMajor(String major) {
+        //TODO: Replace with DB Query
         List<Recommendation> list = new ArrayList<>();
         for(Recommendation rec : recommendations.values()) {
             Log.d("Email", rec.getUserEmail());
@@ -94,12 +91,14 @@ public class MemoryModel implements Model {
 
     @Override
     public void addMovie(final String id, final String title, final String description, double rating) {
+        //TODO: Replace with DB Query
         movies.put(id, new Movie(id, title, description, rating));
     }
 
     @Override
     public void addRecommendation(final String userEmail, final String movieID, final String movieTitle,
                                    final String description, double rating) {
+        //TODO: Replace with DB Query
         recommendations.put(userEmail + ":" + movieID, new Recommendation(userEmail, movieID, movieTitle, description, rating));
     }
 
@@ -109,20 +108,15 @@ public class MemoryModel implements Model {
         return recommendations.get(user.getEmail() + ":" + movie.getMovieID());
     }
 
-
-    @Override
-    public Collection<User> getUsers() {
-        return users.values();
-    }
-
     @Override
     public User getCurrUser() {
+        //TODO: Replace with DB Query
         return currUser;
     }
 
     @Override
     public void setCurrUser(String email, String pass) {
-
+        //TODO: Replace with DB Query
         if(isUser(email)) {
             currUser = users.get(email);
         } else {
