@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -32,11 +34,24 @@ public class BMRecommendationsActivity extends AppCompatActivity {
         recList = (ListView) findViewById(R.id.recommendations);
         Spinner majorDropdown = (Spinner) findViewById(R.id.major_dropdown);
         // TODO: change hard coded array with real data
-        String[] majors = {"CS", "Business", "Memes"};
+        String[] majors = {"All Majors", "CS", "Business", "Memes"};
         ArrayAdapter<String> majorsAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, majors);
         majorDropdown.setAdapter(majorsAdapter);
-        updateRecommendations(getRecommendations(majorDropdown.getSelectedItem().toString()));
+        updateRecommendations(getRecommendations(null));
+        majorDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Log.d("yo", selectedItemView.toString());
+                updateRecommendations(getRecommendations(selectedItemView.toString()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                Log.d("no", "dsfa");
+                updateRecommendations(getRecommendations(null));
+            }
+        });
     }
 
     private void updateRecommendations(Recommendation[] recs) {
@@ -50,9 +65,9 @@ public class BMRecommendationsActivity extends AppCompatActivity {
 
         List<Recommendation> list = new ArrayList<>();
         for(Recommendation rec : prevRecs.values()) {
-            Log.d("MAJOR", BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major"));
-            Log.d("EQUALS", "" + BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").trim().equals(major));
-            if(BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").trim().equals(major)) {
+            Log.d("rec", BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major"));
+            if (major == null || major.equals("All Majors") ||
+                BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").trim().equals(major)) {
                 list.add(rec);
             }
         }
