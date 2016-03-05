@@ -10,21 +10,24 @@ public class Recommendation implements Serializable {
     private String description;
     private String userEmail;
     private String movieTitle;
+    private String movieID;
 
     /**
-    Constructor for movie.
+    Constructor for Recommendation.
+     @param movieID
     @param movieTitle title of movie
     @param description of movie
     @param rating of movie
      */
-    public Recommendation(String userEmail, String movieTitle, String description, double rating) {
+    public Recommendation(String userEmail, String movieID, String movieTitle, String description, double rating) {
         this.rating = rating;
         this.userEmail = userEmail;
         this.movieTitle = movieTitle;
         this.description = description;
+        this.movieID = movieID;
     }
     /**
-    @return description of movie.
+    @return description of recommendation.
      */
     public String getDescription() {
         return description;
@@ -42,13 +45,7 @@ public class Recommendation implements Serializable {
         return rating;
     }
     /**
-    @param rating to update movie with.
-     */
-    public void updateRating(double rating) {
-        this.rating = rating;
-    }
-    /**
-    @return string representation of movie.
+    @return string representation of recommendation.
      */
     public String toString() {
 
@@ -61,5 +58,13 @@ public class Recommendation implements Serializable {
      */
     public String getUserEmail() {
         return userEmail;
+    }
+
+    /**
+     * Returns movie ID for recommendation.
+     * @return movie ID
+     */
+    public String getMovieID() {
+        return movieID;
     }
 }

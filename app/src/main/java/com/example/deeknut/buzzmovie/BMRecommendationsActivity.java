@@ -11,12 +11,10 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.deeknut.buzzmovie.models.MemoryModel;
+import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.Recommendation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,14 +23,15 @@ import java.util.List;
 public class BMRecommendationsActivity extends AppCompatActivity {
     private ListView recList;
     Recommendation[] r;
-    public static HashMap<String, Recommendation> prevRecs = new HashMap<>();
+    //public static HashMap<String, Recommendation> prevRecs = new HashMap<>();
     private Intent recIntent;
+    private Model model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmrecommendations);
-
+        model = MemoryModel.getInstance();
         recIntent = new Intent(this, BMRecActivity.class);
 
         recList = (ListView) findViewById(R.id.recommendations);
@@ -60,7 +59,7 @@ public class BMRecommendationsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 recIntent.putExtra("DAT_MOVIE_DOE",
-                        BMSearchActivity.prevMovies.get(r[position].getTitle()));
+                        model.getMovieById(r[position].getMovieID()));
                 recIntent.putExtra("isEditable", false);
                 startActivity(recIntent);
             }
@@ -75,21 +74,7 @@ public class BMRecommendationsActivity extends AppCompatActivity {
 
     private Recommendation[] getRecommendations(String major) {
         // TODO: change janky hard coded stuff with real data
-
-        List<Recommendation> list = new ArrayList<>();
-        for(Recommendation rec : prevRecs.values()) {
-            if (major.equals("All Majors") ||
-                BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major") != null &&
-                BMRegisterActivity.userInfoMap.get(rec.getUserEmail()).get("Major").equals(major)) {
-                list.add(rec);
-            }
-        }
-        Collections.sort(list, new Comparator<Recommendation>() {
-            @Override
-            public int compare(Recommendation r1, Recommendation r2) {
-                return (r1.getRating() - r2.getRating()) < 0 ? 1 : 0;
-            }
-        });
+        List<Recommendation> list = model.getRecommendationsByMajor(major);
         r = new Recommendation[list.size()];
         for (int i = 0; i < list.size(); i++) {
             r[i] = list.get(i);

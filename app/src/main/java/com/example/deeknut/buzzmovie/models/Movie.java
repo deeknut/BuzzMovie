@@ -9,6 +9,7 @@ public class Movie implements Serializable {
     private double rating;
     private String title;
     private String description;
+    private String id;
     private int counter;
 
     /**
@@ -17,11 +18,12 @@ public class Movie implements Serializable {
     @param description of movie
     @param rating of movie
      */
-    public Movie(String title, String description, double rating) {
+    public Movie(String movieID, String title, String description, double rating) {
         this.rating = rating;
         this.title = title;
         this.description = description;
         this.counter = rating > 0 ? 1 : 0;
+        id = movieID;
     }
     /**
     @return description of movie.
@@ -36,10 +38,16 @@ public class Movie implements Serializable {
         return title;
     }
     /**
-    @return rating of movie.
+     @return rating of movie.
      */
     public double getRating() {
         return rating;
+    }
+    /**
+     @return ID of movie.
+     */
+    public String getMovieID() {
+        return id;
     }
     /**
     @param rating to update movie with.

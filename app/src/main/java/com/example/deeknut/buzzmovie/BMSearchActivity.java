@@ -16,13 +16,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.deeknut.buzzmovie.models.MemoryModel;
+import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 /**
  * Search screen that allows users to search and filter for movies
@@ -36,7 +36,8 @@ public class BMSearchActivity extends AppCompatActivity {
     private EditText searchInput;
     Movie[] movieTitles;
     Intent movieScreenIntent;
-    public static HashMap<String, Movie> prevMovies = new HashMap<>();
+    //public static HashMap<String, Movie> prevMovies = new HashMap<>();
+    private Model model;
 
     /**
      * {@inheritDoc}
@@ -45,6 +46,7 @@ public class BMSearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = MemoryModel.getInstance();
         setContentView(R.layout.activity_bmsearch);
         movieScreenIntent = new Intent(this, BMMovieActivity.class);
 
@@ -130,15 +132,14 @@ public class BMSearchActivity extends AppCompatActivity {
                         movieTitles = new Movie[moviesSize];
                         for (int i = 0; i < moviesSize; i++) {
                             JSONObject movie = movies.getJSONObject(i);
-                            if(prevMovies.get(movie.getString("title")) == null) {
-                               prevMovies.put(movie.getString("title"), new Movie(movie.getString("title"),
+                            if(!model.hasMovie(movie.getString("id"))) {
+                               model.addMovie(movie.getString("id"), movie.getString("title"),
                                        movie.getString("synopsis"),
-                                       movie.getJSONObject("ratings").getInt("critics_score") / 20.0));
+                                       movie.getJSONObject("ratings").getInt("critics_score") / 20.0);
 
-                            } else {
-                                Log.d("SLDJFLSK", ""+prevMovies.get(movie.getString("title")).getRating());
                             }
-                            movieTitles[i] = prevMovies.get(movie.getString("title"));
+                            movieTitles[i] = model.getMovieById(movie.getString("id"));
+                            Log.d("MOVIEEE", movie.toString());
                         }
                         adapter = new ArrayAdapter<>(BMSearchActivity.this,
                                 android.R.layout.simple_list_item_1, movieTitles);

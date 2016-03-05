@@ -8,7 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.HashMap;
+import com.example.deeknut.buzzmovie.models.MemoryModel;
+import com.example.deeknut.buzzmovie.models.Model;
 
 public class BMProfileActivity extends AppCompatActivity {
 
@@ -18,6 +19,7 @@ public class BMProfileActivity extends AppCompatActivity {
     private EditText mMajor;
     private Button   mSave;
     private String curUser;
+    private Model model;
     /**
      * {@inheritDoc}
      * Called when login activity instance is started
@@ -26,7 +28,7 @@ public class BMProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmprofile);
-
+        model = MemoryModel.getInstance();
         //TODO Put the toolbar and fab back!?
         /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -51,17 +53,17 @@ public class BMProfileActivity extends AppCompatActivity {
         //SET CONTENTS OF BOXES IN PROFILE ACTIVITY
         curUser = BMLoginActivity.currentUser;
         mUsername.setText(curUser);
-        mPassword.setText(BMRegisterActivity.userToPassMap.get(curUser));
+        mPassword.setText(model.getCurrUser().getPass());
 
-        if (!BMRegisterActivity.userInfoMap.containsKey(curUser)) {
+        /*if (!BMRegisterActivity.userInfoMap.containsKey(curUser)) {
             HashMap<String, String> newUserInfo = new HashMap<>();
             newUserInfo.put("Major", "");
             newUserInfo.put("Interests", "");
             BMRegisterActivity.userInfoMap.put(curUser, newUserInfo);
-        }
+        }*/
 
-        mMajor.setText(BMRegisterActivity.userInfoMap.get(curUser).get("Major"));
-        mInterests.setText(BMRegisterActivity.userInfoMap.get(curUser).get("Interests"));
+        mMajor.setText(model.getCurrUser().getMajor());
+        mInterests.setText(model.getCurrUser().getInterests());
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,11 +76,9 @@ public class BMProfileActivity extends AppCompatActivity {
     Saves user information.
      */
     private void saveUserInfo() {
-        //Add User's Info To Map
-        BMRegisterActivity.userInfoMap.get(curUser)
-                .put("Major", mMajor.getText().toString());
-        BMRegisterActivity.userInfoMap.get(curUser)
-                .put("Interests", mInterests.getText().toString());
+        //Add User's Info
+        model.getCurrUser().setMajor(mMajor.getText().toString());
+        model.getCurrUser().setInterests(mInterests.getText().toString());
 
     }
     /**

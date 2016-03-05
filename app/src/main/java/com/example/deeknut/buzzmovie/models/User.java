@@ -17,6 +17,8 @@ public class User {
     public User(String email, String pass) {
         this.email = email;
         this.pass = pass;
+        this.major = "";
+        this.interests = "";
     }
     /**
     Returns user email.

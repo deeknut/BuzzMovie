@@ -2,22 +2,25 @@ package com.example.deeknut.buzzmovie;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.deeknut.buzzmovie.models.MemoryModel;
+import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.Movie;
 import com.example.deeknut.buzzmovie.models.Recommendation;
 
 
 public class BMRecActivity extends AppCompatActivity {
 
-    Recommendation recommendation;
-    RatingBar rating;
-    TextView title;
-    TextView desc;
+    private Recommendation recommendation;
+    private RatingBar rating;
+    private TextView title;
+    private TextView desc;
+    private Model model;
+    private Movie movie;
 
     @Override
     /**
@@ -27,10 +30,10 @@ public class BMRecActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rec);
-
-        Movie movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
+        model = MemoryModel.getInstance();
+        movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
         Boolean isEditable = getIntent().getBooleanExtra("isEditable", false);
-        recommendation = BMRecommendationsActivity.prevRecs.get(movie.getTitle());
+        recommendation = model.getRecommendationByUserAndMovie(model.getCurrUser(), movie);
         title = (TextView)findViewById(R.id.title);
         desc = (TextView)findViewById(R.id.desc);
         rating = (RatingBar)findViewById(R.id.ratingBar);
@@ -57,10 +60,9 @@ public class BMRecActivity extends AppCompatActivity {
     Goes back to movie view.
      **/
     private void goBackToMovie() {
-        Recommendation rec = new Recommendation(BMLoginActivity.currentUser,title.getText().toString(),
+        //Log.d("TITLE", rec.getTitle());
+        model.addRecommendation(model.getCurrUser().getEmail(), movie.getMovieID(), movie.getTitle(),
                 desc.getText().toString(), rating.getRating());
-        Log.d("TITLE", rec.getTitle());
-        BMRecommendationsActivity.prevRecs.put(rec.getTitle(), rec);
         finish();
     }
 }

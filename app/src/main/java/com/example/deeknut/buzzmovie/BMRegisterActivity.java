@@ -29,9 +29,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.deeknut.buzzmovie.models.MemoryModel;
+import com.example.deeknut.buzzmovie.models.Model;
+
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -45,9 +47,9 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    public static HashMap<String,String> userToPassMap = new HashMap<>();
-    public static HashMap<String,HashMap<String, String>> userInfoMap = new HashMap<>();
-
+    //public static HashMap<String,String> userToPassMap = new HashMap<>();
+    //public static HashMap<String,HashMap<String, String>> userInfoMap = new HashMap<>();
+    private Model model;
     public Intent appScreenIntent;
 
     /**
@@ -72,7 +74,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmregister);
         appScreenIntent = new Intent(this, BMAppActivity.class);
-
+        model = MemoryModel.getInstance();
         // Set up the register form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -210,7 +212,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
-        } else if (userToPassMap.containsKey(email)) {
+        } else if (model.isUser(email)) {
             mEmailView.setError(getString(R.string.error_pre_existing_email));
             focusView = mEmailView;
             cancel = true;
@@ -383,7 +385,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             } catch (InterruptedException e) {
                 return false;
             }
-                userToPassMap.put(mEmail, mPassword);
+                model.setCurrUser(mEmail, mPassword);
 
             return true;
         }

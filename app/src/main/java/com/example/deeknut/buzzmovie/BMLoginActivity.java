@@ -31,6 +31,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.deeknut.buzzmovie.models.MemoryModel;
+import com.example.deeknut.buzzmovie.models.Model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +50,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
     private static final int REQUEST_READ_CONTACTS = 0;
 
     public static String currentUser;
-
+    private Model model;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -67,6 +70,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = MemoryModel.getInstance();
         appScreenIntent = new Intent(this, BMAppActivity.class);
         setContentView(R.layout.activity_bmlogin);
         // Set up the login form.
@@ -372,9 +376,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
             } catch (InterruptedException e) {
                 return false;
             }
-
-            String p = BMRegisterActivity.userToPassMap.get(mEmail);
-            return p != null && p.equals(mPassword);
+            return model.checkUser(mEmail, mPassword);
         }
 
         /**
@@ -416,24 +418,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
                     dialog.dismiss();
                 }
             });
-            /*progressDialog = ProgressDialog.show(
-                    BMLoginActivity.this,
-                    "Logging in...",
-                    "Please wait...",
-                    true,
-                    true,
-                    new DialogInterface.OnCancelListener(){
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            mAuthTask.onCancelled();
-                            finish();
-                        }
-                    }
-            );
-            */
             progressDialog.show();
-            //progressDialog.setCancelable(true);
-            //progressDialog.setCanceledOnTouchOutside(false);
         }
 
         /**
