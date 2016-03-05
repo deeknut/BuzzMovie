@@ -38,6 +38,10 @@ public class BMSearchActivity extends AppCompatActivity {
     Intent movieScreenIntent;
     public static HashMap<String, Movie> prevMovies = new HashMap<>();
 
+    /**
+     * {@inheritDoc}
+     * Called when app activity instance is started
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,7 +172,7 @@ public class BMSearchActivity extends AppCompatActivity {
 
         queue.add(jsonRequest);
     }
-    /*
+    /**
     Closing actions after search is implemented.
      */
     private void removeSearchInputFocus() {
