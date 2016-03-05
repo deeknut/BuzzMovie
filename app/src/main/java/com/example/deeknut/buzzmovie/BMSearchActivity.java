@@ -42,7 +42,7 @@ public class BMSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmsearch);
-        movieScreenIntent = new Intent(this, MovieActivity.class);
+        movieScreenIntent = new Intent(this, BMMovieActivity.class);
 
         queue = Volley.newRequestQueue(this);
         results = (ListView) findViewById(R.id.results_listView);

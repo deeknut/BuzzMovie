@@ -38,7 +38,9 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
             }
         });
 
-        Button ratingButton = (Button) findViewById(R.id.rec_button);
+        Button recButton = (Button) findViewById(R.id.rec_button);
+        //JAVA 8
+        recButton.setOnClickListener(e -> onRecClicked());
     }
 
     private void goBackToSearch() {
@@ -55,5 +57,11 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
             BMSearchActivity.prevMovies.put(movie.getTitle(), movie);
             this.rating.setRating((float) movie.getRating());
         }
+    }
+
+    private void onRecClicked() {
+        Intent updateRecIntent = new Intent(this, BMRecActivity.class);
+        updateRecIntent.putExtra("DAT_MOVIE_DOE", movie);
+        startActivity(updateRecIntent);
     }
 }

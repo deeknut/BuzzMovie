@@ -9,44 +9,48 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.deeknut.buzzmovie.models.Movie;
 import com.example.deeknut.buzzmovie.models.Recommendation;
-
-import java.util.HashMap;
 
 
 public class BMRecActivity extends AppCompatActivity {
 
     Recommendation recommendation;
     RatingBar rating;
+    TextView title;
+    TextView desc;
+
     //HashMap<String, Recommendation> recommendations;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rec);
 
-        recommendation = (Recommendation) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
-        Log.d("RecommendationActivity", recommendation.toString());
-        TextView title = (TextView)findViewById(R.id.title);
-        title.setText(recommendation.getTitle());
-        TextView desc = (TextView)findViewById(R.id.desc);
-        desc.setText(recommendation.getDescription());
+        Movie movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
+        recommendation = BMRecommendationsActivity.prevRecs.get(movie.getTitle());
+        title = (TextView)findViewById(R.id.title);
+        desc = (TextView)findViewById(R.id.desc);
+        rating = (RatingBar)findViewById(R.id.ratingBar);
+        title.setText(movie.getTitle());
+        if(recommendation != null) {
+            Log.d("RecommendationActivity", recommendation.toString());
+            desc.setText(recommendation.getDescription());
+            rating.setRating((float) recommendation.getRating());
+            rating.setOnRatingBarChangeListener(this);
+        }
 
-        rating = (RatingBar)findViewById(R.id.rating);
-        rating.setRating((float) recommendation.getRating());
-        rating.setOnRatingBarChangeListener(this);
 
-        Button backButton = (Button) findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goBackToSearch();
-            }
-        });
+
+        Button saveButton = (Button) findViewById(R.id.save_button);
+        saveButton.setOnClickListener(e -> goBackToSearch());
     }
 
     private void goBackToSearch() {
-        Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
-        startActivity(searchScreenIntent);
+        //Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
+        //startActivity(searchScreenIntent);
+        Recommendation rec = new Recommendation(title.getText().toString(),BMLoginActivity.currentUser,
+                desc.getText().toString(), rating.getRating());
+        BMRecommendationsActivity.prevRecs.put(rec.getTitle(), rec);
         finish();
     }
 
@@ -55,7 +59,7 @@ public class BMRecActivity extends AppCompatActivity {
         if(fromUser) {
             Log.d("tag", "" + rating);
             recommendation.updateRating(rating);
-            BMRecomendationsActivity.recommendations.put(recommendation.getTitle(), recommendation);
+            BMRecommendationsActivity.prevRecs.put(recommendation.getTitle(), recommendation);
             this.rating.setRating((float) recommendation.getRating());
         }
     }

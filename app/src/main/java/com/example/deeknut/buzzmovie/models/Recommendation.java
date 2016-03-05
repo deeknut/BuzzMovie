@@ -49,6 +49,11 @@ public class Recommendation {
     @return string representation of movie.
      */
     public String toString() {
+
         return "Recommendation" + userEmail + movieTitle;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
     }
 }

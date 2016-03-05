@@ -59,4 +59,12 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Recommendation"
+        android:id="@+id/rec_button"
+        android:layout_above="@+id/back_button"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
