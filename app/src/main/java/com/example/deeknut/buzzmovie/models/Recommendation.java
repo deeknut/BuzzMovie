@@ -50,7 +50,7 @@ public class Recommendation {
      */
     public String toString() {
 
-        return "Recommendation" + userEmail + movieTitle;
+        return movieTitle + ", Rated by: " + userEmail + ", Rating: "+ rating;
     }
 
     public String getUserEmail() {

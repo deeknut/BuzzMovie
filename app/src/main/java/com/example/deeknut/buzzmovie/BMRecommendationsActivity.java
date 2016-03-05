@@ -45,7 +45,7 @@ public class BMRecommendationsActivity extends AppCompatActivity {
 
     private void updateRecommendations(Recommendation[] recs) {
         ArrayAdapter<Recommendation> recsAdapter = new ArrayAdapter<>(
-                this, android.R.layout.activity_list_item, recs);
+                this, android.R.layout.simple_list_item_1, recs);
         recList.setAdapter(recsAdapter);
     }
 
