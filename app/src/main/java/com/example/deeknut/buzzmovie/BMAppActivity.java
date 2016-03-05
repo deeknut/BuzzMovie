@@ -57,7 +57,7 @@ public class BMAppActivity extends AppCompatActivity {
     private void attemptGoToSearchPage() {
         Intent searchIntent = new Intent(this, BMSearchActivity.class);
         startActivity(searchIntent);
-        finish();
+        //finish();
     }
 
     /**

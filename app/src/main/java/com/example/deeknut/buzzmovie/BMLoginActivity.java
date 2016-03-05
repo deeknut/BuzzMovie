@@ -245,7 +245,7 @@ public class BMLoginActivity extends AppCompatActivity implements LoaderCallback
      * Checks if password is valid
      */
     private boolean isPasswordValid(String password) {
-        return password.length() > 8;
+        return password.length() > 3;
     }
 
     /**

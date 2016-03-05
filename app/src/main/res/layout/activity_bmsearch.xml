@@ -77,7 +77,7 @@
 
         <ListView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="376dp"
             android:id="@+id/results_listView"
             android:focusable="false"
             android:focusableInTouchMode="false"
