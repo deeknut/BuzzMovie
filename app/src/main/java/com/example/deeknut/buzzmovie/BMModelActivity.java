@@ -15,6 +15,7 @@ public abstract class BMModelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO: Change to DatabaseModel once DB is working
         model = MemoryModel.getInstance();
     }
 
