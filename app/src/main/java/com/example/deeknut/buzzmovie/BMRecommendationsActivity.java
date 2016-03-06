@@ -2,7 +2,6 @@ package com.example.deeknut.buzzmovie;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,8 +10,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.deeknut.buzzmovie.models.MemoryModel;
-import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.Recommendation;
 
 import java.util.List;
@@ -20,18 +17,16 @@ import java.util.List;
 /**
  * Recommendations screen that allows users to search and filter for recommendations
  */
-public class BMRecommendationsActivity extends AppCompatActivity {
+public class BMRecommendationsActivity extends BMModelActivity {
     private ListView recList;
     Recommendation[] r;
     //public static HashMap<String, Recommendation> prevRecs = new HashMap<>();
     private Intent recIntent;
-    private Model model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmrecommendations);
-        model = MemoryModel.getInstance();
         recIntent = new Intent(this, BMRecActivity.class);
 
         recList = (ListView) findViewById(R.id.recommendations);
@@ -59,8 +54,8 @@ public class BMRecommendationsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 recIntent.putExtra("DAT_MOVIE_DOE",
-                        model.getMovieById(r[position].getMovieID()));
-                recIntent.putExtra("DAT_USER_DOE", model.getUserByEmail(r[position].getUserEmail()));
+                        getModel().getMovieById(r[position].getMovieID()));
+                recIntent.putExtra("DAT_USER_DOE", getModel().getUserByEmail(r[position].getUserEmail()));
                 recIntent.putExtra("isEditable", false);
                 startActivity(recIntent);
             }
@@ -74,7 +69,7 @@ public class BMRecommendationsActivity extends AppCompatActivity {
     }
 
     private Recommendation[] getRecommendations(String major) {
-        List<Recommendation> list = model.getRecommendationsByMajor(major);
+        List<Recommendation> list = getModel().getRecommendationsByMajor(major);
         r = new Recommendation[list.size()];
         for (int i = 0; i < list.size(); i++) {
             r[i] = list.get(i);

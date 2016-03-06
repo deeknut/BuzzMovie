@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,10 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.deeknut.buzzmovie.models.MemoryModel;
-import com.example.deeknut.buzzmovie.models.Model;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,20 +36,18 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A register screen that offers register via email/password.
  */
-public class BMRegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class BMRegisterActivity extends BMModelActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    private Model model;
     public Intent appScreenIntent;
 
     /**
      * Keep track of the register task to ensure we can cancel it if requested.
      */
     private UserRegisterTask mAuthTask = null;
-    private File userInfo = new File("user_info.txt");
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -72,7 +65,6 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmregister);
         appScreenIntent = new Intent(this, BMAppActivity.class);
-        model = MemoryModel.getInstance();
         // Set up the register form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -210,7 +202,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
-        } else if (model.isUser(email)) {
+        } else if (getModel().isUser(email)) {
             mEmailView.setError(getString(R.string.error_pre_existing_email));
             focusView = mEmailView;
             cancel = true;
@@ -383,7 +375,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
             } catch (InterruptedException e) {
                 return false;
             }
-                model.setCurrUser(mEmail, mPassword);
+                getModel().setCurrUser(mEmail, mPassword);
 
             return true;
         }

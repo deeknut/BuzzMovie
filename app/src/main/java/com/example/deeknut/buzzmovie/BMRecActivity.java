@@ -1,26 +1,22 @@
 package com.example.deeknut.buzzmovie;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.deeknut.buzzmovie.models.MemoryModel;
-import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.Movie;
 import com.example.deeknut.buzzmovie.models.Recommendation;
 import com.example.deeknut.buzzmovie.models.User;
 
 
-public class BMRecActivity extends AppCompatActivity {
+public class BMRecActivity extends BMModelActivity {
 
     private Recommendation recommendation;
     private RatingBar rating;
     private TextView title;
     private TextView desc;
-    private Model model;
     private Movie movie;
     private User user;
 
@@ -32,11 +28,10 @@ public class BMRecActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rec);
-        model = MemoryModel.getInstance();
         movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
         user = (User) getIntent().getSerializableExtra("DAT_USER_DOE");
         Boolean isEditable = getIntent().getBooleanExtra("isEditable", false);
-        recommendation = model.getRecommendationByUserAndMovie(user, movie);
+        recommendation = getModel().getRecommendationByUserAndMovie(user, movie);
         title = (TextView)findViewById(R.id.title);
         desc = (TextView)findViewById(R.id.desc);
         rating = (RatingBar)findViewById(R.id.ratingBar);
@@ -63,7 +58,7 @@ public class BMRecActivity extends AppCompatActivity {
     Goes back to movie view.
      **/
     private void goBackToMovie() {
-        model.addRecommendation(user.getEmail(), movie.getMovieID(), movie.getTitle(),
+        getModel().addRecommendation(user.getEmail(), movie.getMovieID(), movie.getTitle(),
                 desc.getText().toString(), rating.getRating());
         finish();
     }

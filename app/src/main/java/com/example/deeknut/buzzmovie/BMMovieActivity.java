@@ -1,6 +1,5 @@
 package com.example.deeknut.buzzmovie;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,14 +8,11 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.deeknut.buzzmovie.models.MemoryModel;
-import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.Movie;
 
-public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarChangeListener {
+public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRatingBarChangeListener {
     private Movie movie;
     private RatingBar rating;
-    private Model model;
     /**
      * {@inheritDoc}
      * Called when login activity instance is started
@@ -25,7 +21,6 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-        model = MemoryModel.getInstance();
         movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
         Log.d("MovieActivity", movie.toString());
         TextView title = (TextView)findViewById(R.id.title);
@@ -70,7 +65,7 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
         if(fromUser) {
             Log.d("tag", "" + rating);
             movie.updateRating(rating);
-            model.addMovie(movie.getMovieID(), movie.getTitle(), movie.getDescription(), movie.getRating());
+            getModel().addMovie(movie.getMovieID(), movie.getTitle(), movie.getDescription(), movie.getRating());
             this.rating.setRating((float) movie.getRating());
         }
     }
@@ -80,8 +75,8 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
     private void onRecClicked() {
         Intent updateRecIntent = new Intent(this, BMRecActivity.class);
         updateRecIntent.putExtra("DAT_MOVIE_DOE", movie);
-        updateRecIntent.putExtra("DAT_USER_DOE", model.getCurrUser());
-        Log.d("DAT_USER_DOE", model.getCurrUser().toString());
+        updateRecIntent.putExtra("DAT_USER_DOE", getModel().getCurrUser());
+        Log.d("DAT_USER_DOE", getModel().getCurrUser().toString());
         updateRecIntent.putExtra("isEditable", true);
         startActivity(updateRecIntent);
     }

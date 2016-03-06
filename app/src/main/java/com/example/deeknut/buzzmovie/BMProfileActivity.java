@@ -2,23 +2,18 @@ package com.example.deeknut.buzzmovie;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.deeknut.buzzmovie.models.MemoryModel;
-import com.example.deeknut.buzzmovie.models.Model;
-
-public class BMProfileActivity extends AppCompatActivity {
+public class BMProfileActivity extends BMModelActivity {
 
     private TextView mUsername;
     private TextView mPassword;
     private EditText mInterests;
     private EditText mMajor;
     private Button   mSave;
-    private Model model;
     /**
      * {@inheritDoc}
      * Called when login activity instance is started
@@ -27,7 +22,6 @@ public class BMProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmprofile);
-        model = MemoryModel.getInstance();
         //TODO Put the toolbar and fab back!?
         /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,11 +44,11 @@ public class BMProfileActivity extends AppCompatActivity {
         mSave  = (Button) findViewById(R.id.profile_save);
 
         //SET CONTENTS OF BOXES IN PROFILE ACTIVITY
-        mUsername.setText(model.getCurrUser().getEmail());
-        mPassword.setText(model.getCurrUser().getPass());
+        mUsername.setText(getModel().getCurrUser().getEmail());
+        mPassword.setText(getModel().getCurrUser().getPass());
 
-        mMajor.setText(model.getCurrUser().getMajor());
-        mInterests.setText(model.getCurrUser().getInterests());
+        mMajor.setText(getModel().getCurrUser().getMajor());
+        mInterests.setText(getModel().getCurrUser().getInterests());
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,8 +62,8 @@ public class BMProfileActivity extends AppCompatActivity {
      */
     private void saveUserInfo() {
         //Add User's Info
-        model.getCurrUser().setMajor(mMajor.getText().toString());
-        model.getCurrUser().setInterests(mInterests.getText().toString());
+        getModel().getCurrUser().setMajor(mMajor.getText().toString());
+        getModel().getCurrUser().setInterests(mInterests.getText().toString());
 
     }
     /**
