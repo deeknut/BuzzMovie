@@ -74,7 +74,6 @@ public class BMRecommendationsActivity extends AppCompatActivity {
     }
 
     private Recommendation[] getRecommendations(String major) {
-        // TODO: change janky hard coded stuff with real data
         List<Recommendation> list = model.getRecommendationsByMajor(major);
         r = new Recommendation[list.size()];
         for (int i = 0; i < list.size(); i++) {

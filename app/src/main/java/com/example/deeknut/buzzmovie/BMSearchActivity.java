@@ -36,7 +36,6 @@ public class BMSearchActivity extends AppCompatActivity {
     private EditText searchInput;
     Movie[] movieTitles;
     Intent movieScreenIntent;
-    //public static HashMap<String, Movie> prevMovies = new HashMap<>();
     private Model model;
 
     /**

@@ -53,13 +53,6 @@ public class BMProfileActivity extends AppCompatActivity {
         mUsername.setText(model.getCurrUser().getEmail());
         mPassword.setText(model.getCurrUser().getPass());
 
-        /*if (!BMRegisterActivity.userInfoMap.containsKey(curUser)) {
-            HashMap<String, String> newUserInfo = new HashMap<>();
-            newUserInfo.put("Major", "");
-            newUserInfo.put("Interests", "");
-            BMRegisterActivity.userInfoMap.put(curUser, newUserInfo);
-        }*/
-
         mMajor.setText(model.getCurrUser().getMajor());
         mInterests.setText(model.getCurrUser().getInterests());
         mSave.setOnClickListener(new View.OnClickListener() {

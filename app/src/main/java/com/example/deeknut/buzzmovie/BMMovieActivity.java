@@ -46,13 +46,12 @@ public class BMMovieActivity extends Activity implements RatingBar.OnRatingBarCh
         });
 
         Button recButton = (Button) findViewById(R.id.rec_button);
-        //JAVA 8
         recButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onRecClicked();
             }
-        });;
+        });
     }
     /**
     Goes back to movie search screen.

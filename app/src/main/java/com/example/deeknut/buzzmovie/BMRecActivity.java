@@ -63,7 +63,6 @@ public class BMRecActivity extends AppCompatActivity {
     Goes back to movie view.
      **/
     private void goBackToMovie() {
-        //Log.d("TITLE", rec.getTitle());
         model.addRecommendation(user.getEmail(), movie.getMovieID(), movie.getTitle(),
                 desc.getText().toString(), rating.getRating());
         finish();

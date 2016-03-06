@@ -47,8 +47,6 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    //public static HashMap<String,String> userToPassMap = new HashMap<>();
-    //public static HashMap<String,HashMap<String, String>> userInfoMap = new HashMap<>();
     private Model model;
     public Intent appScreenIntent;
 
@@ -404,9 +402,7 @@ public class BMRegisterActivity extends AppCompatActivity implements LoaderCallb
                 startActivity(appScreenIntent);
                 finish();
             } else {
-                if(!success) {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                }
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
         }
