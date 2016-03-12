@@ -4,6 +4,7 @@ package com.example.deeknut.buzzmovie.models;
  * Created by Jay on 3/4/16.
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,7 +72,7 @@ public interface Model {
      * Get current user logged in to the application
      * @return current user logged in to application
      */
-    User getCurrUser();
+    User getCurUser();
 
     /**
      * Sets the current user of the application. Checks to see if user already exists - if not,
@@ -79,7 +80,7 @@ public interface Model {
      * @param email of current user.
      * @param pass of current user.
      */
-    void setCurrUser(String email, String pass);
+    void setCurUser(String email, String pass);
 
     /**
      * Checks whether movie exists in memory
@@ -94,5 +95,10 @@ public interface Model {
      * @return recommendations for a specific major
      */
     List<Recommendation> getRecommendationsByMajor(String major);
+
+    /**
+     * Returns an array list of all users in system
+     */
+    ArrayList<User> listUsers();
 
 }

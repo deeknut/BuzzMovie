@@ -44,11 +44,11 @@ public class BMProfileActivity extends BMModelActivity {
         mSave  = (Button) findViewById(R.id.profile_save);
 
         //SET CONTENTS OF BOXES IN PROFILE ACTIVITY
-        mUsername.setText(getModel().getCurrUser().getEmail());
-        mPassword.setText(getModel().getCurrUser().getPass());
+        mUsername.setText(getModel().getCurUser().getEmail());
+        mPassword.setText(getModel().getCurUser().getPass());
 
-        mMajor.setText(getModel().getCurrUser().getMajor());
-        mInterests.setText(getModel().getCurrUser().getInterests());
+        mMajor.setText(getModel().getCurUser().getMajor());
+        mInterests.setText(getModel().getCurUser().getInterests());
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,8 +62,8 @@ public class BMProfileActivity extends BMModelActivity {
      */
     private void saveUserInfo() {
         //Add User's Info
-        getModel().getCurrUser().setMajor(mMajor.getText().toString());
-        getModel().getCurrUser().setInterests(mInterests.getText().toString());
+        getModel().getCurUser().setMajor(mMajor.getText().toString());
+        getModel().getCurUser().setInterests(mInterests.getText().toString());
 
     }
     /**

@@ -30,6 +30,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.deeknut.buzzmovie.models.User;
+
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -190,6 +193,22 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
             cancel = true;
         }
 
+        // Check for an account lock
+        User user = getModel().getUserByEmail(email);
+        if (user != null && user.isLocked()) {
+            mEmailView.setError(getString(R.string.error_locked_account));
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+        // Check for an account ban
+        if (user != null && user.isBanned()) {
+            mEmailView.setError(getString(R.string.error_banned_account));
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
@@ -212,7 +231,6 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
             currentUser = email;
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
-
         }
     }
 
@@ -383,11 +401,14 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
 
             if (success && progressDialog.isShowing()) {
                 Log.d("Process", "Process finished.");
-                getModel().setCurrUser(mEmail, mPassword);
+                getModel().setCurUser(mEmail, mPassword);
+                getModel().getUserByEmail(mEmail).restoreLoginAttempts();
                 startActivity(appScreenIntent);
                 finish();
             } else {
                 if(!success) {
+                    User u = getModel().getUserByEmail(mEmail);
+                    if (u != null) { u.newBadLoginAttempt(); }
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
                 }
                 mPasswordView.requestFocus();

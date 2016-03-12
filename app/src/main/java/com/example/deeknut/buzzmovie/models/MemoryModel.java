@@ -7,6 +7,7 @@ package com.example.deeknut.buzzmovie.models;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class MemoryModel implements Model {
     /**
      * Makes a new model
      */
-    public MemoryModel() {
+    private MemoryModel() {
         users = new HashMap<>();
         movies = new HashMap<>();
         recommendations =  new HashMap<>();
@@ -45,6 +46,10 @@ public class MemoryModel implements Model {
     public boolean isUser(final String email) {
         User s = users.get(email);
         return s != null;
+    }
+
+    public ArrayList<User> listUsers() {
+        return new ArrayList<>(users.values());
     }
 
     @Override
@@ -96,12 +101,12 @@ public class MemoryModel implements Model {
     }
 
     @Override
-    public User getCurrUser() {
+    public User getCurUser() {
         return currUser;
     }
 
     @Override
-    public void setCurrUser(String email, String pass) {
+    public void setCurUser(String email, String pass) {
         if(isUser(email)) {
             currUser = users.get(email);
         } else {

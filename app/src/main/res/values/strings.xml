@@ -8,6 +8,8 @@
     <string name="action_register">Register</string>
     <string name="action_sign_in_short">Login</string>
     <string name="action_cancel">Cancel</string>
+    <string name="error_banned_account">This account has been banned due to misconduct.</string>
+    <string name="error_locked_account">This account has been locked due to excessive login attempts.</string>
     <string name="error_invalid_email">This email is invalid</string>
     <string name="error_pre_existing_email">This email already exists</string>
     <string name="error_invalid_password">This password is too short</string>

@@ -1,6 +1,7 @@
 package com.example.deeknut.buzzmovie.models;
 
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +29,11 @@ public class DatabaseModel implements Model {
      */
     private User currUser;
     private static Model singleton;
+
     /**
      * Makes a new model
      */
-    public DatabaseModel() {
+    private DatabaseModel() {
         //TODO: Change to Database connection calls/etc
         users = new HashMap<>();
         movies = new HashMap<>();
@@ -50,6 +52,11 @@ public class DatabaseModel implements Model {
         //TODO: Replace with DB Query
         User s = users.get(email);
         return s != null;
+    }
+
+    @Override
+    public ArrayList<User> listUsers() {
+        return new ArrayList<>(users.values());
     }
 
     @Override
@@ -108,13 +115,13 @@ public class DatabaseModel implements Model {
     }
 
     @Override
-    public User getCurrUser() {
+    public User getCurUser() {
         //TODO: Replace with DB Query
         return currUser;
     }
 
     @Override
-    public void setCurrUser(String email, String pass) {
+    public void setCurUser(String email, String pass) {
         //TODO: Replace with DB Query
         if(isUser(email)) {
             currUser = users.get(email);
@@ -126,7 +133,7 @@ public class DatabaseModel implements Model {
 
     public static Model getInstance() {
         if(singleton == null) {
-            singleton = new MemoryModel();
+            singleton = new DatabaseModel();
         }
         return singleton;
     }

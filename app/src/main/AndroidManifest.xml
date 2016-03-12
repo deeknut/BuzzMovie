@@ -35,8 +35,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BMSearchActivity" />
         <activity android:name=".BMMovieActivity" />
-        <activity android:name=".BMRecActivity"></activity>
-        <activity android:name=".BMRecommendationsActivity"></activity>
+        <activity android:name=".BMRecActivity" />
+        <activity android:name=".BMRecommendationsActivity" />
+        <activity android:name=".BMManageUsersActivity"></activity>
     </application>
 
 </manifest>

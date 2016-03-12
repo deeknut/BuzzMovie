@@ -8,10 +8,13 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String email;
     private String pass;
-    private String firstName;
-    private String lastName;
     private String major;
     private String interests;
+    private Boolean isBanned;
+    private Boolean isLocked;
+    private int badLoginAttempts;
+    private final Boolean isAdmin;
+
     /** Constructor for user.
     @param email for user
     @param pass password for user
@@ -21,6 +24,11 @@ public class User implements Serializable {
         this.pass = pass;
         this.major = "";
         this.interests = "";
+        this.badLoginAttempts = 0;
+        this.isLocked = false;
+        this.isBanned = false;
+        //TODO change when we have a real admin account
+        this.isAdmin = email.equals("@dmin.");
     }
     /**
     Returns user email.
@@ -70,5 +78,59 @@ public class User implements Serializable {
      */
     public void setMajor(String major) {
         this.major = major;
+    }
+    /**
+     Checks whether the user is an admin.
+     */
+    public Boolean isLocked() {
+        return isLocked;
+    }
+    /**
+     * unlocks user account after bad login attempts
+     */
+    public void unlock() {
+        badLoginAttempts = 0;
+        isLocked = false;
+    }
+    /**
+     * Reset bad login attempts
+     */
+    public void restoreLoginAttempts() {
+        badLoginAttempts = 0;
+    }
+    /**
+     * Count a new bad login attempt
+     */
+    public void newBadLoginAttempt() {
+        //TODO badLoginAttempts not changing
+        badLoginAttempts += 1;
+        isLocked = badLoginAttempts > 3;
+    }
+
+    /**
+     * Checks whether a user is banned. Admins cannot be banned.
+     * @return whether user is banned
+     */
+    public Boolean isBanned() {
+        return isBanned && !isAdmin();
+    }
+    /**
+     Sets unlocks user account
+     */
+    public void setIsBanned(Boolean b) {
+        isBanned = b;
+    }
+    /**
+     Checks whether the user is an admin.
+     */
+    public Boolean isAdmin() { return isAdmin; }
+
+    public String toString() {
+        String toStr = getEmail() + " is";
+
+        if (isBanned()) { toStr += " BANNED"; }
+        if (isLocked()) { toStr += " LOCKED"; }
+        if (!isBanned() && !isLocked()) { toStr += " CLEAN"; }
+        return toStr;
     }
 }

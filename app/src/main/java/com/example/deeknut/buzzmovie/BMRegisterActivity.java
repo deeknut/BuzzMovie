@@ -375,8 +375,6 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
             } catch (InterruptedException e) {
                 return false;
             }
-                getModel().setCurrUser(mEmail, mPassword);
-
             return true;
         }
 
@@ -391,6 +389,7 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
 
             if (success) {
                 Log.d("Process", "Process finished.");
+                getModel().setCurUser(mEmail, mPassword);
                 startActivity(appScreenIntent);
                 finish();
             } else {

@@ -2,11 +2,14 @@ package com.example.deeknut.buzzmovie;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
-public class BMAppActivity extends AppCompatActivity {
+import com.example.deeknut.buzzmovie.models.Model;
+import com.example.deeknut.buzzmovie.models.User;
+
+public class BMAppActivity extends BMModelActivity {
 
     /**
      * {@inheritDoc}
@@ -48,6 +51,23 @@ public class BMAppActivity extends AppCompatActivity {
                 attemptGoToRecPage();
             }
         });
+
+        Model m = getModel();
+        User u  = m.getCurUser();
+        if (u.isAdmin()) {
+            RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
+
+            Button manageUsersBt = new Button(this);
+            manageUsersBt.setText("Manage Users");
+            //manageUsersBt.setLayoutParams(new RelativeLayout.LayoutParams(?));
+            manageUsersBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptGoToManageUsers();
+                }
+            });
+            relativeLayout.addView(manageUsersBt);
+        }
     }
 
     /**
@@ -83,5 +103,13 @@ public class BMAppActivity extends AppCompatActivity {
     private void attemptGoToRecPage() {
         Intent recActivityIntent = new Intent(this, BMRecommendationsActivity.class);
         startActivity(recActivityIntent);
+    }
+
+    /**
+     * Attempts to go to the Manage Users page
+     */
+    private void attemptGoToManageUsers() {
+        Intent manageUsersIntent = new Intent(this, BMManageUsersActivity.class);
+        startActivity(manageUsersIntent);
     }
 }
