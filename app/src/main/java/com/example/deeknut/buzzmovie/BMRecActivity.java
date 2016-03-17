@@ -54,9 +54,8 @@ public class BMRecActivity extends BMModelActivity {
             }
         });
     }
-    /**
-    Goes back to movie view.
-     **/
+
+    /** Goes back to movie view. **/
     private void goBackToMovie() {
         getModel().addRecommendation(user.getEmail(), movie.getMovieID(), movie.getTitle(),
                 desc.getText().toString(), rating.getRating());

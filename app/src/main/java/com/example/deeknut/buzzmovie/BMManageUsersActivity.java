@@ -8,6 +8,10 @@ import android.widget.ListView;
 
 import com.example.deeknut.buzzmovie.models.User;
 
+/**
+ * Displays all the users for the application to the admin, and provides options for
+ * blocking/unblocking and locking/unlocking the user.
+ */
 public class BMManageUsersActivity extends BMModelActivity {
 
     //TODO lock user out after multiple logins
