@@ -3,6 +3,8 @@ package com.example.deeknut.buzzmovie.models;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,6 +31,8 @@ public class DatabaseModel implements Model {
      */
     private User currUser;
     private static Model singleton;
+    private static Firebase firebase;
+    private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";
 
     /**
      * Makes a new model
@@ -38,6 +42,7 @@ public class DatabaseModel implements Model {
         users = new HashMap<>();
         movies = new HashMap<>();
         recommendations =  new HashMap<>();
+        firebase = new Firebase(baseUrl);
     }
 
     @Override

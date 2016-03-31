@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 
 import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.User;
+import com.firebase.client.Firebase;
 
 public class BMAppActivity extends BMModelActivity {
 
@@ -17,6 +18,7 @@ public class BMAppActivity extends BMModelActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Firebase.setAndroidContext(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmapp);
 
