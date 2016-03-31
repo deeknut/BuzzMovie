@@ -84,7 +84,6 @@ public class DatabaseModel implements Model {
         //TODO: Replace with DB Query
         List<Recommendation> list = new ArrayList<>();
         for(Recommendation rec : recommendations.values()) {
-            Log.d("Email", rec.getUserEmail());
             if (major.equals("All Majors") ||
                     major.equals(getUserByEmail(rec.getUserEmail()).getMajor())) {
                 list.add(rec);
@@ -101,7 +100,7 @@ public class DatabaseModel implements Model {
 
     @Override
     public void addMovie(final String id, final String title, final String description, double rating) {
-        //movies.put(id, new Movie(id, title, description, rating));
+        movies.put(id, new Movie(id, title, description, rating));
         firebase.child("movies").child(id).setValue(new Movie(id, title, description, rating));
     }
 
@@ -132,7 +131,7 @@ public class DatabaseModel implements Model {
             currUser = new User(email, pass);
             users.put(email, currUser);
         }
-        firebase.child("users").child(email).setValue(currUser);
+        firebase.child("users").child(email.replace("@", "").replace(".", "")).setValue(currUser);
     }
 
     public static Model getInstance() {

@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.deeknut.buzzmovie.models.User;
+import com.firebase.client.Firebase;
 
 import java.io.Console;
 import java.util.ArrayList;

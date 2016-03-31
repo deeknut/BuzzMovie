@@ -18,7 +18,6 @@ public class BMAppActivity extends BMModelActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Firebase.setAndroidContext(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmapp);
 

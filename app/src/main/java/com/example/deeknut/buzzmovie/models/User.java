@@ -69,7 +69,7 @@ public class User implements Serializable {
      */
     public void setInterests(String interests) {
         this.interests = interests;
-        firebase.child("users").child("interests").setValue(interests);
+        firebase.child("users").child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
     }
     /**
     Gets major of user.
@@ -83,9 +83,8 @@ public class User implements Serializable {
     @param major for user.
      */
     public void setMajor(String major) {
-
         this.major = major;
-        firebase.child("users").child("major").setValue(major);
+        firebase.child("users").child(email.replace("@", "").replace(".", "")).child("major").setValue(major);
     }
     /**
      Checks whether the user is an admin.
