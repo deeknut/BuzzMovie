@@ -1,5 +1,7 @@
 package com.example.deeknut.buzzmovie.models;
 
+import com.firebase.client.Firebase;
+
 import java.io.Serializable;
 
 /**
@@ -14,6 +16,8 @@ public class User implements Serializable {
     private Boolean isLocked;
     private int badLoginAttempts;
     private final Boolean isAdmin;
+    private static Firebase firebase;
+    private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";
 
     /** Constructor for user.
     @param email for user
@@ -29,6 +33,7 @@ public class User implements Serializable {
         this.isBanned = false;
         //TODO change when we have a real admin account
         this.isAdmin = email.equals("@dmin.");
+        firebase = new Firebase(baseUrl);
     }
     /**
     Returns user email.
@@ -64,6 +69,7 @@ public class User implements Serializable {
      */
     public void setInterests(String interests) {
         this.interests = interests;
+        firebase.child("users").child("interests").setValue(interests);
     }
     /**
     Gets major of user.
@@ -77,7 +83,9 @@ public class User implements Serializable {
     @param major for user.
      */
     public void setMajor(String major) {
+
         this.major = major;
+        firebase.child("users").child("major").setValue(major);
     }
     /**
      Checks whether the user is an admin.
@@ -91,12 +99,16 @@ public class User implements Serializable {
     public void unlock() {
         badLoginAttempts = 0;
         isLocked = false;
+        firebase.child("users").child("isLocked").setValue(false);
+        firebase.child("users").child("badLoginAttempts").setValue(0);
     }
     /**
      * Reset bad login attempts
      */
     public void restoreLoginAttempts() {
+
         badLoginAttempts = 0;
+        firebase.child("users").child("badLoginAttempts").setValue(0);
     }
     /**
      * Count a new bad login attempt
@@ -105,6 +117,8 @@ public class User implements Serializable {
         //TODO badLoginAttempts not changing
         badLoginAttempts += 1;
         isLocked = badLoginAttempts > 3;
+        firebase.child("users").child("badLoginAttempts").setValue(badLoginAttempts);
+        firebase.child("users").child("isLocked").setValue(isLocked);
     }
 
     /**
@@ -118,7 +132,9 @@ public class User implements Serializable {
      Sets unlocks user account
      */
     public void setIsBanned(Boolean b) {
+
         isBanned = b;
+        firebase.child("users").child("isBanned").setValue(isBanned);
     }
     /**
      Checks whether the user is an admin.

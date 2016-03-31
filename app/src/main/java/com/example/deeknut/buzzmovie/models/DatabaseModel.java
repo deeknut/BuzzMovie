@@ -1,7 +1,6 @@
 package com.example.deeknut.buzzmovie.models;
 
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.firebase.client.Firebase;
 
@@ -32,7 +31,7 @@ public class DatabaseModel implements Model {
     private User currUser;
     private static Model singleton;
     private static Firebase firebase;
-    private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";
+    private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";//"https://shining-heat-1721.firebaseio.com";
 
     /**
      * Makes a new model
@@ -102,15 +101,16 @@ public class DatabaseModel implements Model {
 
     @Override
     public void addMovie(final String id, final String title, final String description, double rating) {
-        //TODO: Replace with DB Query
-        movies.put(id, new Movie(id, title, description, rating));
+        //movies.put(id, new Movie(id, title, description, rating));
+        firebase.child("movies").child(id).setValue(new Movie(id, title, description, rating));
     }
 
     @Override
     public void addRecommendation(final String userEmail, final String movieID, final String movieTitle,
                                   final String description, double rating) {
-        //TODO: Replace with DB Query
-        recommendations.put(userEmail + ":" + movieID, new Recommendation(userEmail, movieID, movieTitle, description, rating));
+        //recommendations.put(userEmail + ":" + movieID, new Recommendation(userEmail, movieID, movieTitle, description, rating));
+        firebase.child("recommendations").child(userEmail + ":" + movieID).
+                setValue(new Recommendation(userEmail, movieID, movieTitle, description, rating));
     }
 
     @Override
@@ -121,19 +121,18 @@ public class DatabaseModel implements Model {
 
     @Override
     public User getCurUser() {
-        //TODO: Replace with DB Query
         return currUser;
     }
 
     @Override
     public void setCurUser(String email, String pass) {
-        //TODO: Replace with DB Query
         if(isUser(email)) {
             currUser = users.get(email);
         } else {
             currUser = new User(email, pass);
             users.put(email, currUser);
         }
+        firebase.child("users").child(email).setValue(currUser);
     }
 
     public static Model getInstance() {
