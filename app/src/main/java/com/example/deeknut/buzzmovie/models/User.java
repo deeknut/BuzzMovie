@@ -1,5 +1,7 @@
 package com.example.deeknut.buzzmovie.models;
 
+import android.util.Log;
+
 import com.firebase.client.Firebase;
 
 import java.io.Serializable;
@@ -16,8 +18,8 @@ public class User implements Serializable {
     private Boolean isLocked;
     private int badLoginAttempts;
     private final Boolean isAdmin;
-    private static Firebase firebase;
-    private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";
+    //private static Firebase firebase;
+    //private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";
 
     /** Constructor for user.
     @param email for user
@@ -33,7 +35,7 @@ public class User implements Serializable {
         this.isBanned = false;
         //TODO change when we have a real admin account
         this.isAdmin = email.equals("@dmin.");
-        firebase = new Firebase(baseUrl);
+        //firebase = new Firebase(baseUrl);
     }
     /**
     Returns user email.
@@ -69,7 +71,8 @@ public class User implements Serializable {
      */
     public void setInterests(String interests) {
         this.interests = interests;
-        firebase.child("users").child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
+        //firebase.child("users").child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
+        ((MemoryModel) MemoryModel.getInstance(null)).writeUsers();
     }
     /**
     Gets major of user.
@@ -84,7 +87,9 @@ public class User implements Serializable {
      */
     public void setMajor(String major) {
         this.major = major;
-        firebase.child("users").child(email.replace("@", "").replace(".", "")).child("major").setValue(major);
+        //firebase.child("users").child(email.replace("@", "").replace(".", "")).child("major").setValue(major);
+        Log.d("my major", ((MemoryModel) MemoryModel.getInstance(null)).users.get("j@.").getMajor());
+        ((MemoryModel) MemoryModel.getInstance(null)).writeUsers();
     }
     /**
      Checks whether the user is an admin.
@@ -98,8 +103,9 @@ public class User implements Serializable {
     public void unlock() {
         badLoginAttempts = 0;
         isLocked = false;
-        firebase.child("users").child("isLocked").setValue(false);
-        firebase.child("users").child("badLoginAttempts").setValue(0);
+        //firebase.child("users").child("isLocked").setValue(false);
+        //firebase.child("users").child("badLoginAttempts").setValue(0);
+        ((MemoryModel) MemoryModel.getInstance(null)).writeUsers();
     }
     /**
      * Reset bad login attempts
@@ -107,7 +113,8 @@ public class User implements Serializable {
     public void restoreLoginAttempts() {
 
         badLoginAttempts = 0;
-        firebase.child("users").child("badLoginAttempts").setValue(0);
+        //firebase.child("users").child("badLoginAttempts").setValue(0);
+        ((MemoryModel) MemoryModel.getInstance(null)).writeUsers();
     }
     /**
      * Count a new bad login attempt
@@ -116,8 +123,9 @@ public class User implements Serializable {
         //TODO badLoginAttempts not changing
         badLoginAttempts += 1;
         isLocked = badLoginAttempts > 3;
-        firebase.child("users").child("badLoginAttempts").setValue(badLoginAttempts);
-        firebase.child("users").child("isLocked").setValue(isLocked);
+        //firebase.child("users").child("badLoginAttempts").setValue(badLoginAttempts);
+        //firebase.child("users").child("isLocked").setValue(isLocked);
+        ((MemoryModel) MemoryModel.getInstance(null)).writeUsers();
     }
 
     /**
@@ -133,7 +141,8 @@ public class User implements Serializable {
     public void setIsBanned(Boolean b) {
 
         isBanned = b;
-        firebase.child("users").child("isBanned").setValue(isBanned);
+        //firebase.child("users").child("isBanned").setValue(isBanned);
+        ((MemoryModel) MemoryModel.getInstance(null)).writeUsers();
     }
     /**
      Checks whether the user is an admin.

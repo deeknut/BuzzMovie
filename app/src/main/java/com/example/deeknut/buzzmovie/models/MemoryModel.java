@@ -4,8 +4,16 @@ package com.example.deeknut.buzzmovie.models;
  * Singleton class that serves as an interfacer for all stored data.
  */
 
+import android.content.Context;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,7 +27,7 @@ public class MemoryModel implements Model {
 
     /** The collection of users, movies, and recs, keyed by name.
      * Currently our structurers.*/
-    private Map<String, User> users;
+    public Map<String, User> users;
     private Map<String, Movie> movies;
     private Map<String, Recommendation> recommendations;
     /**
@@ -27,19 +35,79 @@ public class MemoryModel implements Model {
      */
     private User currUser;
     private static Model singleton;
+    ObjectInputStream userObjectInputStream;
+    ObjectInputStream movieObjectInputStream;
+    ObjectInputStream recObjectInputStream;
+
+    ObjectOutputStream userObjectOutputStream;
+    ObjectOutputStream movieObjectOutputStream;
+    ObjectOutputStream recObjectOutputStream;
+
     /**
      * Makes a new model
+     * @param c Context used to find file directory
      */
-    private MemoryModel() {
-        users = new HashMap<>();
-        movies = new HashMap<>();
-        recommendations =  new HashMap<>();
+    private MemoryModel(Context c) {
+        try {
+            userObjectInputStream = new ObjectInputStream(new FileInputStream(new File(c.getFilesDir(), "users.txt")));
+            users = (HashMap) userObjectInputStream.readObject();
+            Log.d("users map", users.toString());
+        } catch (Exception e) {
+            Log.d("user no pesistence", "fdsfa");
+            users = new HashMap<>();
+        }
+        try {
+            movieObjectInputStream = new ObjectInputStream(new FileInputStream(new File(c.getFilesDir(), "movies.txt")));
+            movies = (HashMap) movieObjectInputStream.readObject();
+        } catch (Exception e) {
+            Log.d("movie no pesistence", "fdsfa");
+            movies = new HashMap<>();
+        }
+        try {
+            recObjectInputStream = new ObjectInputStream(new FileInputStream(new File(c.getFilesDir(), "recs.txt")));
+            recommendations = (HashMap) recObjectInputStream.readObject();
+        } catch (Exception e) {
+            Log.d("rec no pesistence", "fdsfa");
+            recommendations = new HashMap<>();
+        }
+        try {
+            userObjectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(c.getFilesDir(), "users.txt")));
+        } catch (Exception e) {
+            File f = new File(c.getFilesDir(), "users.txt");
+            try {
+                f.createNewFile();
+            } catch (Exception ec) {
+                System.out.println("create users failed");
+                System.out.println(ec.getMessage());
+            }
+        }
+        try {
+            movieObjectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(c.getFilesDir(), "movies.txt")));
+        } catch (Exception e) {
+            File f = new File(c.getFilesDir(), "movies.txt");
+            try {
+                f.createNewFile();
+                movieObjectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(c.getFilesDir(), "movies.txt")));
+            } catch (Exception ec) {
+                System.out.println("create movies failed");
+            }
+        }
+        try {
+            recObjectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(c.getFilesDir(), "recs.txt")));
+        } catch (Exception e) {
+            File f = new File(c.getFilesDir(), "recs.txt");
+            try {
+                f.createNewFile();
+                recObjectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(c.getFilesDir(), "recs.txt")));
+            } catch (Exception ec) {
+                System.out.println("create recs failed");
+            }
+        }
     }
 
     @Override
      public boolean checkUser(final String email, final String password) {
-        User s = users.get(email);
-        return s != null && password.equals(s.getPass());
+        User s = users.get(email); return s != null && password.equals(s.getPass());
     }
 
     @Override
@@ -87,12 +155,14 @@ public class MemoryModel implements Model {
     @Override
     public void addMovie(final String id, final String title, final String description, double rating) {
         movies.put(id, new Movie(id, title, description, rating));
+        write(movies, movieObjectOutputStream);
     }
 
     @Override
     public void addRecommendation(final String userEmail, final String movieID, final String movieTitle,
                                    final String description, double rating) {
         recommendations.put(userEmail + ":" + movieID, new Recommendation(userEmail, movieID, movieTitle, description, rating));
+        write(recommendations, recObjectOutputStream);
     }
 
     @Override
@@ -112,14 +182,36 @@ public class MemoryModel implements Model {
         } else {
             currUser = new User(email, pass);
             users.put(email, currUser);
+            write(users, userObjectOutputStream);
         }
     }
 
-    public static Model getInstance() {
+    public static Model getInstance(Context c) {
         if(singleton == null) {
-            singleton = new MemoryModel();
+            singleton = new MemoryModel(c);
         }
         return singleton;
     }
 
+    /**
+     * writes a map to  a textfile
+     * @param m map to write
+     * @param s stream to write with
+     */
+    public void write(Map m, ObjectOutputStream s) {
+        try {
+            s.writeObject(m);
+            s.flush();
+        } catch (Exception e) {
+            Log.d("write failed", e.getMessage());
+        }
+    }
+
+    /**
+     * write the users map
+     */
+    public void writeUsers() {
+        Log.d("my major", users.get("j@.").getMajor());
+        write(users, userObjectOutputStream);
+    }
 }

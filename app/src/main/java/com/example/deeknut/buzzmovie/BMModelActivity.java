@@ -18,8 +18,8 @@ public abstract class BMModelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //TODO: Change to DatabaseModel once DB is working
-        Firebase.setAndroidContext(this);
-        model = DatabaseModel.getInstance();
+        //Firebase.setAndroidContext(this);
+        model = MemoryModel.getInstance(this);
     }
 
     /**
