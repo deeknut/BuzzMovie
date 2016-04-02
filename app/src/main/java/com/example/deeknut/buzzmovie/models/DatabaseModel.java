@@ -22,7 +22,7 @@ import java.util.Map;
 public class DatabaseModel implements Model {
 
     /** The collection of users, movies, and recs, keyed by name.
-     * Should be removed later once the database functionality is added.
+     * Used to cache all changes that happen in database for program access.
      */
     private Map<String, User> users;
     private Map<String, Movie> movies;
