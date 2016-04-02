@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.deeknut.buzzmovie.models.DatabaseModel;
-import com.example.deeknut.buzzmovie.models.MemoryModel;
 import com.example.deeknut.buzzmovie.models.Model;
 import com.firebase.client.Firebase;
 
@@ -17,7 +16,6 @@ public abstract class BMModelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: Change to DatabaseModel once DB is working
         Firebase.setAndroidContext(this);
         model = DatabaseModel.getInstance();
     }

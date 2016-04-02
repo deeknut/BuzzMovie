@@ -2,7 +2,10 @@ package com.example.deeknut.buzzmovie.models;
 
 import android.util.Log;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +17,7 @@ import java.util.Map;
 /**
  * Singleton class that provides database functionality and should serve as the ultimate
  * interfacer for the application.
- * TODO: Use DatabaseModel instead of MemoryModel in BMModelActivity
+ *
  */
 public class DatabaseModel implements Model {
 
@@ -31,30 +34,89 @@ public class DatabaseModel implements Model {
     private User currUser;
     private static Model singleton;
     private static Firebase firebase;
-    private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";//"https://shining-heat-1721.firebaseio.com";
+    private static final String baseUrl = "https://deeknut.firebaseio.com";//"https://shining-heat-1721.firebaseio.com";
 
     /**
      * Makes a new model
      */
     private DatabaseModel() {
-        //TODO: Change to Database connection calls/etc
         users = new HashMap<>();
         movies = new HashMap<>();
         recommendations =  new HashMap<>();
         firebase = new Firebase(baseUrl);
+        firebase.addChildEventListener(new ChildEventListener() {
+            /**
+             * Updates local hashmaps with updates from firebase.
+             * @param snapshot describes data to be updated
+             */
+            private void updateMaps(DataSnapshot snapshot) {
+                if(snapshot.getKey().equals("users")) {
+                    for (DataSnapshot userSnap : snapshot.getChildren()) {
+                        Map map = (Map) userSnap.getValue();
+                        users.put(userSnap.getKey(), new User(userSnap.getKey(), (String) map.get("pass"),
+                                map.get("interests").toString(), map.get("major").toString(),
+                                (boolean) map.get("banned")));
+                    }
+                } else if(snapshot.getKey().equals("movies")) {
+                    for (DataSnapshot userSnap : snapshot.getChildren()) {
+                        Map map = (Map) userSnap.getValue();
+                        movies.put(userSnap.getKey(), new Movie(userSnap.getKey(), (String) map.get("title"),
+                                map.get("description").toString(), (double) map.get("rating")));
+                    }
+                } else if(snapshot.getKey().equals("recommendations")) {
+                    for (DataSnapshot userSnap : snapshot.getChildren()) {
+                        Map map = (Map) userSnap.getValue();
+                        recommendations.put(userSnap.getKey(), new Recommendation(map.get("userEmail").toString(),
+                                map.get("movieID").toString(), map.get("title").toString(), map.get("description").toString(),
+                                (double) map.get("rating")));
+                    }
+                }
+            }
+
+            @Override
+            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
+                Log.d("ADDED TO SNAPSHOT", snapshot.getKey());
+                updateMaps(snapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot snapshot, String s) {
+                Log.d("CHANGED IN SNAPSHOT", snapshot.getKey());
+                updateMaps(snapshot);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot snapshot) {
+                Log.d("REMOVED FROM SNAPSHOT", snapshot.getKey());
+                updateMaps(snapshot);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot snapshot, String s) {
+                Log.d("MOVED IN SNAPSHOT", snapshot.getKey());
+                updateMaps(snapshot);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.d("FIREBASE ERROR", firebaseError.toString());
+            }
+        });
+    }
+
+    private String parseEmail(String email) {
+        return email.replace("@", "").replace(".", "");
     }
 
     @Override
     public boolean checkUser(final String email, final String password) {
-        //TODO: Replace with DB Query
-        User s = users.get(email);
+        User s = users.get(parseEmail(email));
         return s != null && password.equals(s.getPass());
     }
 
     @Override
     public boolean isUser(final String email) {
-        //TODO: Replace with DB Query
-        User s = users.get(email);
+        User s = users.get(parseEmail(email));
         return s != null;
     }
 
@@ -65,23 +127,21 @@ public class DatabaseModel implements Model {
 
     @Override
     public User getUserByEmail(final String email) {
-        //TODO: Replace with DB Query
-        return users.get(email);
+        System.out.println(users);
+        System.out.println(users.get(parseEmail(email)));
+        return users.get(parseEmail(email));
     }
     @Override
     public Movie getMovieById(final String id) {
-        //TODO: Replace with DB Query
         return movies.get(id);
     }
     @Override
     public boolean hasMovie(final String id) {
-        //TODO: Replace with DB Query
         return movies.get(id) != null;
     }
 
     @Override
     public List<Recommendation> getRecommendationsByMajor(String major) {
-        //TODO: Replace with DB Query
         List<Recommendation> list = new ArrayList<>();
         for(Recommendation rec : recommendations.values()) {
             if (major.equals("All Majors") ||
@@ -114,7 +174,6 @@ public class DatabaseModel implements Model {
 
     @Override
     public Recommendation getRecommendationByUserAndMovie(User user, Movie movie) {
-        //TODO: Replace with DB Query
         return recommendations.get(user.getEmail() + ":" + movie.getMovieID());
     }
 
@@ -125,16 +184,20 @@ public class DatabaseModel implements Model {
 
     @Override
     public void setCurUser(String email, String pass) {
-        if(isUser(email)) {
-            currUser = users.get(email);
-        } else {
+        currUser = users.get(email.replace("@", "").replace(".", ""));
+        if(currUser == null) {
             currUser = new User(email, pass);
             users.put(email, currUser);
+            firebase.child("users").child(parseEmail(email)).setValue(currUser);
         }
-        firebase.child("users").child(email.replace("@", "").replace(".", "")).setValue(currUser);
+
     }
 
-    public static Model getInstance() {
+    /**
+     * Gets current instance of model. Creates new instance if not done so already.
+     * @return current instance of model
+     */
+     public static Model getInstance() {
         if(singleton == null) {
             singleton = new DatabaseModel();
         }

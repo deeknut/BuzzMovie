@@ -1,5 +1,7 @@
 package com.example.deeknut.buzzmovie.models;
 
+import android.util.Log;
+
 import com.firebase.client.Firebase;
 
 import java.io.Serializable;
@@ -17,7 +19,7 @@ public class User implements Serializable {
     private int badLoginAttempts;
     private final Boolean isAdmin;
     private static Firebase firebase;
-    private static final String baseUrl = "https://shining-heat-1721.firebaseio.com";
+    private static final String baseUrl = "https://deeknut.firebaseio.com";
 
     /** Constructor for user.
     @param email for user
@@ -34,6 +36,32 @@ public class User implements Serializable {
         //TODO change when we have a real admin account
         this.isAdmin = email.equals("@dmin.");
         firebase = new Firebase(baseUrl);
+    }
+
+    /** Constructor for user.
+     @param email for user
+     @param pass password for user
+     */
+    public User(String email, String pass, String interests, String major, boolean banned) {
+        this.email = email;
+        this.pass = pass;
+        this.major = major;
+        this.interests = interests;
+        this.badLoginAttempts = 0;
+        this.isLocked = false;
+        this.isBanned = banned;
+        //TODO change when we have a real admin account
+        this.isAdmin = email.equals("@dmin.");
+        firebase = new Firebase(baseUrl);
+    }
+
+    /**
+     * Parses user email to work with firebase
+     * @param email to parse
+     * @return email without @ or .
+     */
+    private String parseEmail(String email) {
+        return email.replace("@", "").replace(".", "");
     }
     /**
     Returns user email.
@@ -69,6 +97,7 @@ public class User implements Serializable {
      */
     public void setInterests(String interests) {
         this.interests = interests;
+        Log.d("SETTING INTERESTS", "DOPLSKDJFL");
         firebase.child("users").child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
     }
     /**
@@ -98,8 +127,8 @@ public class User implements Serializable {
     public void unlock() {
         badLoginAttempts = 0;
         isLocked = false;
-        firebase.child("users").child("isLocked").setValue(false);
-        firebase.child("users").child("badLoginAttempts").setValue(0);
+        firebase.child("users").child(parseEmail(email)).child("isLocked").setValue(false);
+        firebase.child("users").child(parseEmail(email)).child("badLoginAttempts").setValue(0);
     }
     /**
      * Reset bad login attempts
@@ -107,7 +136,7 @@ public class User implements Serializable {
     public void restoreLoginAttempts() {
 
         badLoginAttempts = 0;
-        firebase.child("users").child("badLoginAttempts").setValue(0);
+        firebase.child("users").child(parseEmail(email)).child("badLoginAttempts").setValue(0);
     }
     /**
      * Count a new bad login attempt
@@ -116,8 +145,8 @@ public class User implements Serializable {
         //TODO badLoginAttempts not changing
         badLoginAttempts += 1;
         isLocked = badLoginAttempts > 3;
-        firebase.child("users").child("badLoginAttempts").setValue(badLoginAttempts);
-        firebase.child("users").child("isLocked").setValue(isLocked);
+        firebase.child("users").child(parseEmail(email)).child("isLocked").setValue(badLoginAttempts);
+        firebase.child("users").child(parseEmail(email)).child("badLoginAttempts").setValue(isLocked);
     }
 
     /**
@@ -133,7 +162,7 @@ public class User implements Serializable {
     public void setIsBanned(Boolean b) {
 
         isBanned = b;
-        firebase.child("users").child("isBanned").setValue(isBanned);
+        firebase.child("users").child(parseEmail(email)).child("isBanned").setValue(isBanned);
     }
     /**
      Checks whether the user is an admin.
