@@ -228,7 +228,7 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
      * @return whether email is valid
      * Checks if email is valid
      */
-    private boolean isEmailValid(String email) {
+    public boolean isEmailValid(String email) {
             return email.contains("@") && email.contains(".") && !email.contains(" ");
     }
 
@@ -237,7 +237,7 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
      * @return whether password is valid
      * Checks if password is valid
      */
-    private boolean isPasswordValid(String password) {
+    public boolean isPasswordValid(String password) {
         return password.length() > 3;
     }
 
