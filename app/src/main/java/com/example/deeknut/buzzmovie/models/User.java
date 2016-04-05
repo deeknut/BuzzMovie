@@ -21,6 +21,13 @@ public class User implements Serializable {
     private static Firebase firebase;
     private static final String baseUrl = "https://deeknut.firebaseio.com";
 
+    /**
+     * Default constructor for user. Only used for unit testing.
+     */
+    protected User() {
+        isAdmin = false;
+    }
+
     /** Constructor for user.
     @param email for user
     @param pass password for user
@@ -60,7 +67,7 @@ public class User implements Serializable {
      * @param email to parse
      * @return email without @ or .
      */
-    private String parseEmail(String email) {
+    public static String parseEmail(String email) {
         return email.replace("@", "").replace(".", "");
     }
     /**
