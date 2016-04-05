@@ -7,7 +7,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * Created by Jay on 4/4/16.
+ * JUnit for testing if parseEmail for storage in Firebase works properly.
+ * Author: Jay Devanathan
  */
 public class ParseEmailTest extends User{
 

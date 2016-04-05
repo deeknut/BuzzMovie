@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ * JUnit for testing if password is right length.
  * Author: Brian Wang
  */
 public class CheckPassTest extends BMRegisterActivity {
