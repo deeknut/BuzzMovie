@@ -5,7 +5,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ * JUnit for whether email provided is valid.
+ * Author: Tessa Valentien
  */
 public class CheckEmailTest extends BMRegisterActivity {
 
