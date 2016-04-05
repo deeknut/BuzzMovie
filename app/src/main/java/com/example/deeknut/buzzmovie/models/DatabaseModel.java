@@ -104,7 +104,7 @@ public class DatabaseModel implements Model {
         });
     }
 
-    private String parseEmail(String email) {
+    public String parseEmail(String email) {
         return email.replace("@", "").replace(".", "");
     }
 

@@ -1,21 +1,21 @@
 package com.example.deeknut.buzzmovie;
 
-import org.junit.Test;
+import junit.framework.Assert;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ * Author: Brian Wang
  */
 public class CheckPassTest extends BMRegisterActivity {
 
     @Test
     public void testCheckPass() {
-        assertFalse(isPasswordValid("gg")); //too small
-        assertFalse(isPasswordValid("ggg")); //too small
-        assertTrue(isPasswordValid("gggg")); //just right
-        assertTrue(isPasswordValid("gggggggg")); //greater, should also work
+        Assert.assertFalse(isPasswordValid("gg")); //too small
+        Assert.assertFalse(isPasswordValid("ggg")); //too small
+        Assert.assertTrue(isPasswordValid("gggg")); //just right
+        Assert.assertTrue(isPasswordValid("gggggggg")); //greater, should also work
 
     }
 }
