@@ -53,12 +53,19 @@ public interface Model {
      * Adds recommendation with specified credentials.
      * @param userEmail for recommendation
      * @param movieID for recommendation
-     * @param movieTitle for recommendation
+     * @param movieTitle for recommendatioj
      * @param description of recommendation
      * @param rating for movie that recommendation is associated with
      */
     void addRecommendation(final String userEmail, final String movieID, final String movieTitle,
                            final String description, double rating);
+
+    /**
+     * Adds recommendation with specified credentials.
+     * @param userEmail for recommendation
+     * @param movie for recommendation
+     */
+    void addRecommendation(final String userEmail, Movie movie);
 
     /**
      * Gets recommendation by specified user and movie.
@@ -67,6 +74,14 @@ public interface Model {
      * @return Recommendation that links provided user and movie.
      */
     Recommendation getRecommendationByUserAndMovie(final User user, final Movie movie);
+
+    /**
+     * Gets recommendation by specified user and movie.
+     * @param userEmail to specify recommendation with
+     * @param movie to specify recommendation with
+     * @return Recommendation that links provided user and movie.
+     */
+    Recommendation getRecommendationByUserAndMovie(final String userEmail, final Movie movie);
 
     /**
      * Get current user logged in to the application

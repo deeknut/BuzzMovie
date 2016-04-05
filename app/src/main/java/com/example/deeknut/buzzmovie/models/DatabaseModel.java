@@ -17,7 +17,6 @@ import java.util.Map;
 /**
  * Singleton class that provides database functionality and should serve as the ultimate
  * interfacer for the application.
- *
  */
 public class DatabaseModel implements Model {
 
@@ -173,8 +172,21 @@ public class DatabaseModel implements Model {
     }
 
     @Override
+    public void addRecommendation(final String userEmail, Movie movie) {
+        //recommendations.put(userEmail + ":" + movieID, new Recommendation(userEmail, movieID, movieTitle, description, rating));
+        firebase.child("recommendations").child(userEmail + ":" + movie.getMovieID()).
+                setValue(new Recommendation(userEmail, movie.getMovieID(), movie.getTitle(),
+                        movie.getDescription(), movie.getRating()));
+    }
+
+    @Override
     public Recommendation getRecommendationByUserAndMovie(User user, Movie movie) {
         return recommendations.get(user.getEmail() + ":" + movie.getMovieID());
+    }
+
+    @Override
+    public Recommendation getRecommendationByUserAndMovie(String userEmail, Movie movie) {
+        return recommendations.get(userEmail + ":" + movie.getMovieID());
     }
 
     @Override

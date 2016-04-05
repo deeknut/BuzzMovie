@@ -96,8 +96,20 @@ public class MemoryModel implements Model {
     }
 
     @Override
+    public void addRecommendation(String userEmail, Movie movie) {
+        recommendations.put(userEmail + ":" + movie.getMovieID(),
+                new Recommendation(userEmail, movie.getMovieID(), movie.getTitle(),
+                        movie.getDescription(), movie.getRating()));
+    }
+
+    @Override
     public Recommendation getRecommendationByUserAndMovie(User user, Movie movie) {
         return recommendations.get(user.getEmail() + ":" + movie.getMovieID());
+    }
+
+    @Override
+    public Recommendation getRecommendationByUserAndMovie(String userEmail, Movie movie) {
+        return recommendations.get(userEmail + ":" + movie.getMovieID());
     }
 
     @Override
