@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.deeknut.buzzmovie.models.DatabaseModel;
+import com.example.deeknut.buzzmovie.models.MemoryModel;
 import com.example.deeknut.buzzmovie.models.Model;
 import com.firebase.client.Firebase;
 
@@ -26,5 +27,9 @@ public abstract class BMModelActivity extends AppCompatActivity {
      */
     public Model getModel() {
         return model;
+    }
+
+    public Model getMemoryModel() {
+        return MemoryModel.getInstance();
     }
 }
