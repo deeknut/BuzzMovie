@@ -7,23 +7,23 @@ import java.io.Serializable;
  */
 public class Movie implements Serializable {
     /**
-     *
+     * rating for Movie
      */
     private double rating;
     /**
-     *
+     * title for movie
      */
     private String title;
     /**
-     *
+     * description for movie
      */
     private String description;
     /**
-     *
+     * id for movie
      */
     private String id;
     /**
-     *
+     * counter to check whether rating exists
      */
     private int counter;
 
