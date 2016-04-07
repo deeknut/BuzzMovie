@@ -23,31 +23,31 @@ public final class DatabaseModel implements Model {
      */
 
     /**
-     *
+     * Database model for users
      */
     private Map<String, User> users;
     /**
-     *
+     * Database model for movies
      */
     private Map<String, Movie> movies;
     /**
-     *
+     * Database model for recommendations
      */
     private Map<String, Recommendation> recommendations;
     /**
-     *
+     * reference to currentUser
      */
     private User currUser;
     /**
-     *
+     * Singleton instance
      */
     private static Model singleton;
     /**
-     *
+     * Firebase reference
      */
     private static Firebase firebase;
     /**
-     *
+     * base url for Firebase requests
      */
     private static final String BASEURL = "https://deeknut.firebaseio.com";//"https://shining-heat-1721.firebaseio.com";
 
