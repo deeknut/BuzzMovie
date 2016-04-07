@@ -12,19 +12,19 @@ import android.widget.EditText;
 public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
     /**
-     *
+     * Field that holds email
      */
     private final String mEmail;
     /**
-     *
+     * Field that holds password
      */
     private final String mPassword;
     /**
-     *
+     * Activity for register
      */
     private final BMRegisterActivity register;
     /**
-     *
+     * Editable password view
      */
     private final EditText mPasswordView;
     /**
