@@ -43,7 +43,7 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
     /**
-     *
+     * Static variable for currentUser.
      */
     private static String currentUser;
     /**
@@ -56,23 +56,23 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
      */
     private AutoCompleteTextView mEmailView;
     /**
-     *
+     * View outlet for password
      */
     private EditText mPasswordView;
     /**
-     *
+     * View for progress
      */
     private View mProgressView;
     /**
-     *
+     * View for LoginForm
      */
     private View mLoginFormView;
     /**
-     *
+     * Intent for appScreen
      */
     private Intent appScreenIntent;
     /**
-     *
+     * Static variable for password length
      */
     private static final int PASSWORD_LENGTH = 3;
 
