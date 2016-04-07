@@ -11,51 +11,51 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
     /**
-     *
+     * Field that holds email
      */
     private String email;
     /**
-     *
+     * String variable for users table
      */
     private static final String TABLE = "users";
     /**
-     *
+     * Field that holds pass
      */
     private String pass;
     /**
-     *
+     * Field that holds major
      */
     private String major;
     /**
-     *
+     * Field that stores interests
      */
     private String interests;
     /**
-     *
+     * Represents whether user is banned or not
      */
     private Boolean banned;
     /**
-     *
+     * Represents whether user's account is locked
      */
     private Boolean locked;
     /**
-     *
+     * Number of incorrect login attempts
      */
     private int badLoginAttempts;
     /**
-     *
+     * Represents whether the user is an admin or not
      */
     private final Boolean admin;
     /**
-     *
+     * Represents the firebase
      */
     private static Firebase firebase;
     /**
-     *
+     * Field that stores the base URL
      */
     private static final String BASEURL = "https://deeknut.firebaseio.com";
     /**
-     *
+     * This is swiggums
      */
     private static final int SWIGGUMS = 3;
 
