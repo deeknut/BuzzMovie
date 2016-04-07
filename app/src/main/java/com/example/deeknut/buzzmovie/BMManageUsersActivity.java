@@ -15,11 +15,11 @@ import com.example.deeknut.buzzmovie.models.User;
 public class BMManageUsersActivity extends BMModelActivity {
 
     /**
-     *
+     * ArrayAdapter for the user
      */
     private ArrayAdapter<Object> userAdapter;
     /**
-     *
+     * Position of currently selected item
      */
     private int selectedItem;
 
