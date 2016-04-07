@@ -14,19 +14,19 @@ import com.example.deeknut.buzzmovie.models.User;
 public class BMRecActivity extends BMModelActivity {
 
     /**
-     *
+     * Rating bar for current movie's rating
      */
     private RatingBar rating;
     /**
-     *
+     * Text view for the description of current movie
      */
     private TextView desc;
     /**
-     *
+     * Current movie for this activity
      */
     private Movie movie;
     /**
-     *
+     * Current user for this app
      */
     private User user;
 
