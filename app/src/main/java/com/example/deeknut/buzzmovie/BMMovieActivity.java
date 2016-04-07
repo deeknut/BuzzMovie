@@ -12,11 +12,11 @@ import com.example.deeknut.buzzmovie.models.Movie;
 
 public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRatingBarChangeListener {
     /**
-     *
+     * Movie for this activity
      */
     private Movie movie;
     /**
-     *
+     * Rating bar for the rating of this activity
      */
     private RatingBar rating;
     /**
