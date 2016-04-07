@@ -19,15 +19,15 @@ import java.util.List;
  */
 public class BMRecommendationsActivity extends BMModelActivity {
     /**
-     *
+     * ListView for recommendations
      */
     private ListView recList;
     /**
-     *
+     * list of recommendations as the model for ListView
      */
     private Recommendation[] r;
     /**
-     *
+     * Intent for recommendations
      */
     private Intent recIntent;
 
