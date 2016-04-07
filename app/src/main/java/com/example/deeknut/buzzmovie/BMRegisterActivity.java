@@ -41,11 +41,11 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
      */
     private static final int REQUEST_READ_CONTACTS = 0;
     /**
-     *
+     * Intent for appscreen
      */
     private Intent appScreenIntent;
     /**
-     *
+     * static variable for minimum passwordlength
      */
     private static final int PASSWORD_LENGTH = 3;
     /**
@@ -54,23 +54,23 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
     private UserRegisterTask mAuthTask = null;
 
     /**
-     *
+     * TextView for email
      */
     private AutoCompleteTextView mEmailView;
     /**
-     *
+     * TextView for password
      */
     private EditText mPasswordView;
     /**
-     *
+     * TextView for confirmation password
      */
     private EditText mConfirmPasswordView;
     /**
-     *
+     * View for progress
      */
     private View mProgressView;
     /**
-     *
+     * Container View for register form
      */
     private View mRegisterFormView;
 
