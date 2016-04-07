@@ -13,23 +13,23 @@ import com.example.deeknut.buzzmovie.models.User;
 public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
     /**
-     *
+     * Field that stores email
      */
     private final String mEmail;
     /**
-     *
+     * Field that stores password
      */
     private final String mPassword;
     /**
-     *
+     * This is the progress dialog
      */
     private ProgressDialog progressDialog;
     /**
-     *
+     * Activity that represents login
      */
     private BMLoginActivity login;
     /**
-     *
+     * EditText for the Password View
      */
     private final EditText mPasswordView;
 
