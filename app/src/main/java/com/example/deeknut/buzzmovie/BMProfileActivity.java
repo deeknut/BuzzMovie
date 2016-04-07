@@ -10,11 +10,11 @@ import android.widget.TextView;
 public class BMProfileActivity extends BMModelActivity {
 
     /**
-     *
+     * EditText View for user's interests
      */
     private EditText mInterests;
     /**
-     *
+     * EditText View for users's major
      */
     private EditText mMajor;
     /**
