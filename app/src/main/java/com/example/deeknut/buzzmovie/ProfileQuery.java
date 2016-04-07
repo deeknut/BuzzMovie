@@ -14,7 +14,7 @@ public final class ProfileQuery {
     }
 
     /**
-     *
+     * String array for Projection
      */
     private static final String[] PROJECTION = {
         ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -22,7 +22,7 @@ public final class ProfileQuery {
     };
 
     /**
-     *
+     * Final int variable for the address
      */
     private static final int ADDRESS = 0;
 
