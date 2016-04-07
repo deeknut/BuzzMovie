@@ -4,7 +4,6 @@ package com.example.deeknut.buzzmovie.models;
  * Created by Jay on 3/4/16.
  */
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,7 +112,8 @@ public interface Model {
 
     /**
      * Returns an array list of all users in system
+     * @return a list of users
      */
-    ArrayList<User> listUsers();
+    List<User> listUsers();
 
 }

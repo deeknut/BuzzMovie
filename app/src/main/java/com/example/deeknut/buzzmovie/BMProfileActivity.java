@@ -9,11 +9,14 @@ import android.widget.TextView;
 
 public class BMProfileActivity extends BMModelActivity {
 
-    private TextView mUsername;
-    private TextView mPassword;
+    /**
+     *
+     */
     private EditText mInterests;
+    /**
+     *
+     */
     private EditText mMajor;
-    private Button   mSave;
     /**
      * {@inheritDoc}
      * Called when login activity instance is started
@@ -21,6 +24,11 @@ public class BMProfileActivity extends BMModelActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TextView mUsername;
+        TextView mPassword;
+        Button   mSave;
+
         setContentView(R.layout.activity_bmprofile);
         //TODO Put the toolbar and fab back!?
         /*
@@ -70,7 +78,7 @@ public class BMProfileActivity extends BMModelActivity {
     Returns to original application.
      */
     private void returnToAppActivity() {
-        Intent appScreenIntent = new Intent(this, BMAppActivity.class);
+        final Intent appScreenIntent = new Intent(this, BMAppActivity.class);
         startActivity(appScreenIntent);
         finish();
     }

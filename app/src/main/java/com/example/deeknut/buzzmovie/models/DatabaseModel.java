@@ -1,7 +1,5 @@
 package com.example.deeknut.buzzmovie.models;
 
-import android.util.Log;
-
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -18,22 +16,40 @@ import java.util.Map;
  * Singleton class that provides database functionality and should serve as the ultimate
  * interfacer for the application.
  */
-public class DatabaseModel implements Model {
+public final class DatabaseModel implements Model {
 
-    /** The collection of users, movies, and recs, keyed by name.
-     * Used to cache all changes that happen in database for program access.
+    /* The collection of users, movies, and recs, keyed by name.
+      Used to cache all changes that happen in database for program access.
+     */
+
+    /**
+     *
      */
     private Map<String, User> users;
+    /**
+     *
+     */
     private Map<String, Movie> movies;
+    /**
+     *
+     */
     private Map<String, Recommendation> recommendations;
     /**
-     The below fields will permanently stay as part of the DatabaseModel.
-     Once we switch to database, these will NOT get replaced.
+     *
      */
     private User currUser;
+    /**
+     *
+     */
     private static Model singleton;
+    /**
+     *
+     */
     private static Firebase firebase;
-    private static final String baseUrl = "https://deeknut.firebaseio.com";//"https://shining-heat-1721.firebaseio.com";
+    /**
+     *
+     */
+    private static final String BASEURL = "https://deeknut.firebaseio.com";//"https://shining-heat-1721.firebaseio.com";
 
     /**
      * Makes a new model
@@ -42,92 +58,85 @@ public class DatabaseModel implements Model {
         users = new HashMap<>();
         movies = new HashMap<>();
         recommendations =  new HashMap<>();
-        firebase = new Firebase(baseUrl);
+        firebase = new Firebase(BASEURL);
         firebase.addChildEventListener(new ChildEventListener() {
-            /**
-             * Updates local hashmaps with updates from firebase.
-             * @param snapshot describes data to be updated
-             */
-            private void updateMaps(DataSnapshot snapshot) {
-                if(snapshot.getKey().equals("users")) {
-                    for (DataSnapshot userSnap : snapshot.getChildren()) {
-                        Map map = (Map) userSnap.getValue();
-                        users.put(userSnap.getKey(), new User(userSnap.getKey(), (String) map.get("pass"),
-                                map.get("interests").toString(), map.get("major").toString(),
-                                (boolean) map.get("banned")));
-                    }
-                } else if(snapshot.getKey().equals("movies")) {
-                    for (DataSnapshot userSnap : snapshot.getChildren()) {
-                        Map map = (Map) userSnap.getValue();
-                        movies.put(userSnap.getKey(), new Movie(userSnap.getKey(), (String) map.get("title"),
-                                map.get("description").toString(), (double) map.get("rating")));
-                    }
-                } else if(snapshot.getKey().equals("recommendations")) {
-                    for (DataSnapshot userSnap : snapshot.getChildren()) {
-                        Map map = (Map) userSnap.getValue();
-                        recommendations.put(userSnap.getKey(), new Recommendation(map.get("userEmail").toString(),
-                                map.get("movieID").toString(), map.get("title").toString(), map.get("description").toString(),
-                                (double) map.get("rating")));
-                    }
-                }
-            }
-
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                Log.d("ADDED TO SNAPSHOT", snapshot.getKey());
                 updateMaps(snapshot);
             }
-
             @Override
             public void onChildChanged(DataSnapshot snapshot, String s) {
-                Log.d("CHANGED IN SNAPSHOT", snapshot.getKey());
                 updateMaps(snapshot);
             }
-
             @Override
             public void onChildRemoved(DataSnapshot snapshot) {
-                Log.d("REMOVED FROM SNAPSHOT", snapshot.getKey());
                 updateMaps(snapshot);
             }
-
             @Override
             public void onChildMoved(DataSnapshot snapshot, String s) {
-                Log.d("MOVED IN SNAPSHOT", snapshot.getKey());
                 updateMaps(snapshot);
             }
-
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.d("FIREBASE ERROR", firebaseError.toString());
-            }
+            public void onCancelled(FirebaseError firebaseError) {}
         });
     }
 
+    /**
+     * Updates local hashmaps with updates from firebase.
+     * @param snapshot describes data to be updated
+     */
+    private void updateMaps(DataSnapshot snapshot) {
+        if("users".equals(snapshot.getKey())) {
+            for (final DataSnapshot userSnap : snapshot.getChildren()) {
+                final Map map = (Map) userSnap.getValue();
+                users.put(userSnap.getKey(), new User(userSnap.getKey(), (String) map.get("pass"),
+                        map.get("interests").toString(), map.get("major").toString(),
+                        (boolean) map.get("banned")));
+            }
+        } else if("movies".equals(snapshot.getKey())) {
+            for (final DataSnapshot userSnap : snapshot.getChildren()) {
+                final Map map = (Map) userSnap.getValue();
+                movies.put(userSnap.getKey(), new Movie(userSnap.getKey(), (String) map.get("title"),
+                        map.get("description").toString(), (double) map.get("rating")));
+            }
+        } else if("recommendations".equals(snapshot.getKey())) {
+            for (final DataSnapshot userSnap : snapshot.getChildren()) {
+                final Map map = (Map) userSnap.getValue();
+                recommendations.put(userSnap.getKey(), new Recommendation(map.get("userEmail").toString(),
+                        map.get("movieID").toString(), map.get("title").toString(), map.get("description").toString(),
+                        (double) map.get("rating")));
+            }
+        }
+    }
+
+    /**
+     * Parses email of user to implement in database.
+     * @param email of user
+     * @return parsed form of email to use in database.
+     */
     public String parseEmail(String email) {
         return email.replace("@", "").replace(".", "");
     }
 
     @Override
     public boolean checkUser(final String email, final String password) {
-        User s = users.get(parseEmail(email));
+        final User s = users.get(parseEmail(email));
         return s != null && password.equals(s.getPass());
     }
 
     @Override
     public boolean isUser(final String email) {
-        User s = users.get(parseEmail(email));
+        final User s = users.get(parseEmail(email));
         return s != null;
     }
 
     @Override
-    public ArrayList<User> listUsers() {
+    public List<User> listUsers() {
         return new ArrayList<>(users.values());
     }
 
     @Override
     public User getUserByEmail(final String email) {
-        System.out.println(users);
-        System.out.println(users.get(parseEmail(email)));
         return users.get(parseEmail(email));
     }
     @Override
@@ -141,9 +150,9 @@ public class DatabaseModel implements Model {
 
     @Override
     public List<Recommendation> getRecommendationsByMajor(String major) {
-        List<Recommendation> list = new ArrayList<>();
-        for(Recommendation rec : recommendations.values()) {
-            if (major.equals("All Majors") ||
+        final List<Recommendation> list = new ArrayList<>();
+        for(final Recommendation rec : recommendations.values()) {
+            if ("All Majors".equals(major) ||
                     major.equals(getUserByEmail(rec.getUserEmail()).getMajor())) {
                 list.add(rec);
             }
@@ -209,7 +218,7 @@ public class DatabaseModel implements Model {
      * Gets current instance of model. Creates new instance if not done so already.
      * @return current instance of model
      */
-     public static Model getInstance() {
+    public static Model getInstance() {
         if(singleton == null) {
             singleton = new DatabaseModel();
         }

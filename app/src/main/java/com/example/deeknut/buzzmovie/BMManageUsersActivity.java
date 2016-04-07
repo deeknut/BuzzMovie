@@ -14,9 +14,14 @@ import com.example.deeknut.buzzmovie.models.User;
  */
 public class BMManageUsersActivity extends BMModelActivity {
 
-    //TODO lock user out after multiple logins
-    ArrayAdapter<Object> userAdapter;
-    int selectedItem;
+    /**
+     *
+     */
+    private ArrayAdapter<Object> userAdapter;
+    /**
+     *
+     */
+    private int selectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,21 +41,21 @@ public class BMManageUsersActivity extends BMModelActivity {
         });
 
         //TODO reload the user's toString into the adapter
-        Button banAccountButton = (Button) findViewById(R.id.button_ban_unban_account);
+        final Button banAccountButton = (Button) findViewById(R.id.button_ban_unban_account);
         banAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User u = (User) accountsListView.getItemAtPosition(selectedItem);
+                final User u = (User) accountsListView.getItemAtPosition(selectedItem);
                 u.setIsBanned(!u.isBanned());
                 userAdapter.notifyDataSetChanged();
             }
         });
 
-        Button unlockAccountButton = (Button) findViewById(R.id.button_unlock_account);
+        final Button unlockAccountButton = (Button) findViewById(R.id.button_unlock_account);
         unlockAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User u = (User) accountsListView.getItemAtPosition(selectedItem);
+                final User u = (User) accountsListView.getItemAtPosition(selectedItem);
                 u.unlock();
                 userAdapter.notifyDataSetChanged();
             }

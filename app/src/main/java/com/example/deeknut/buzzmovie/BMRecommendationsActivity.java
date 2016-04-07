@@ -18,9 +18,17 @@ import java.util.List;
  * Recommendations screen that allows users to search and filter for recommendations
  */
 public class BMRecommendationsActivity extends BMModelActivity {
+    /**
+     *
+     */
     private ListView recList;
-    Recommendation[] r;
-    //public static HashMap<String, Recommendation> prevRecs = new HashMap<>();
+    /**
+     *
+     */
+    private Recommendation[] r;
+    /**
+     *
+     */
     private Intent recIntent;
 
     @Override
@@ -30,10 +38,9 @@ public class BMRecommendationsActivity extends BMModelActivity {
         recIntent = new Intent(this, BMRecActivity.class);
 
         recList = (ListView) findViewById(R.id.recommendations);
-        Spinner majorDropdown = (Spinner) findViewById(R.id.major_dropdown);
-        // TODO: change hard coded array with real data
-        String[] majors = {"All Majors", "CS", "Business", "Memes"};
-        ArrayAdapter<String> majorsAdapter = new ArrayAdapter<>(
+        final Spinner majorDropdown = (Spinner) findViewById(R.id.major_dropdown);
+        final String[] majors = {"All Majors", "CS", "Business", "Memes"};
+        final ArrayAdapter<String> majorsAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, majors);
         majorDropdown.setAdapter(majorsAdapter);
         updateRecommendations(getRecommendations("All Majors"));
@@ -62,14 +69,23 @@ public class BMRecommendationsActivity extends BMModelActivity {
         });
     }
 
+    /**
+     * Updates recommendations
+     * @param recs for updating recommendations.
+     */
     private void updateRecommendations(Recommendation[] recs) {
-        ArrayAdapter<Recommendation> recsAdapter = new ArrayAdapter<>(
+        final ArrayAdapter<Recommendation> recsAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, recs);
         recList.setAdapter(recsAdapter);
     }
 
+    /**
+     * Gets recommendations for display.
+     * @param major to filter recommendations to display
+     * @return recommendations to display.
+     */
     private Recommendation[] getRecommendations(String major) {
-        List<Recommendation> list = getModel().getRecommendationsByMajor(major);
+        final List<Recommendation> list = getModel().getRecommendationsByMajor(major);
         r = new Recommendation[list.size()];
         for (int i = 0; i < list.size(); i++) {
             r[i] = list.get(i);

@@ -13,6 +13,9 @@ import com.firebase.client.Firebase;
  * Allows other activities to not import MemoryModel and Model in order to get relevant data.
  */
 public abstract class BMModelActivity extends AppCompatActivity {
+    /**
+     *
+     */
     private Model model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,10 @@ public abstract class BMModelActivity extends AppCompatActivity {
         return model;
     }
 
+    /**
+     * Returns a memory model associated with the activity. Used for testing.
+     * @return Memory model associated with BMModelActivity.
+     */
     public Model getMemoryModel() {
         return MemoryModel.getInstance();
     }

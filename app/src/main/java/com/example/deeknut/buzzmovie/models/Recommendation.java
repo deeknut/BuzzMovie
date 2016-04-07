@@ -6,10 +6,25 @@ import java.io.Serializable;
  * Created by Jay on 3/4/16.
  */
 public class Recommendation implements Serializable {
+    /**
+     *
+     */
     private double rating;
+    /**
+     *
+     */
     private String description;
+    /**
+     *
+     */
     private String userEmail;
+    /**
+     *
+     */
     private String movieTitle;
+    /**
+     *
+     */
     private String movieID;
 
     /**

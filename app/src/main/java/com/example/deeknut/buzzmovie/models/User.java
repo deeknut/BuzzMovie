@@ -10,22 +10,60 @@ import java.io.Serializable;
  * Created by Jay on 2/29/16.
  */
 public class User implements Serializable {
+    /**
+     *
+     */
     private String email;
+    /**
+     *
+     */
+    private static final String TABLE = "users";
+    /**
+     *
+     */
     private String pass;
+    /**
+     *
+     */
     private String major;
+    /**
+     *
+     */
     private String interests;
-    private Boolean isBanned;
-    private Boolean isLocked;
+    /**
+     *
+     */
+    private Boolean banned;
+    /**
+     *
+     */
+    private Boolean locked;
+    /**
+     *
+     */
     private int badLoginAttempts;
-    private final Boolean isAdmin;
+    /**
+     *
+     */
+    private final Boolean admin;
+    /**
+     *
+     */
     private static Firebase firebase;
-    private static final String baseUrl = "https://deeknut.firebaseio.com";
+    /**
+     *
+     */
+    private static final String BASEURL = "https://deeknut.firebaseio.com";
+    /**
+     *
+     */
+    private static final int SWIGGUMS = 3;
 
     /**
      * Default constructor for user. Only used for unit testing.
      */
     protected User() {
-        isAdmin = false;
+        admin = false;
     }
 
     /** Constructor for user.
@@ -38,16 +76,20 @@ public class User implements Serializable {
         this.major = "";
         this.interests = "";
         this.badLoginAttempts = 0;
-        this.isLocked = false;
-        this.isBanned = false;
+        this.locked = false;
+        this.banned = false;
         //TODO change when we have a real admin account
-        this.isAdmin = email.equals("@dmin.");
-        firebase = new Firebase(baseUrl);
+        this.admin = "@dmin.".equals(email);
+        firebase = new Firebase(BASEURL);
     }
 
-    /** Constructor for user.
-     @param email for user
-     @param pass password for user
+    /**
+     * Constructor for user
+     * @param email of user
+     * @param pass password of user
+     * @param interests of user for bio
+     * @param major of user for bio and filtering
+     * @param banned status of user set by admin
      */
     public User(String email, String pass, String interests, String major, boolean banned) {
         this.email = email;
@@ -55,11 +97,11 @@ public class User implements Serializable {
         this.major = major;
         this.interests = interests;
         this.badLoginAttempts = 0;
-        this.isLocked = false;
-        this.isBanned = banned;
+        this.locked = false;
+        this.banned = banned;
         //TODO change when we have a real admin account
-        this.isAdmin = email.equals("@dmin.");
-        firebase = new Firebase(baseUrl);
+        this.admin = "@dmin.".equals(email);
+        firebase = new Firebase(BASEURL);
     }
 
     /**
@@ -105,7 +147,7 @@ public class User implements Serializable {
     public void setInterests(String interests) {
         this.interests = interests;
         Log.d("SETTING INTERESTS", "DOPLSKDJFL");
-        firebase.child("users").child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
+        firebase.child(TABLE).child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
     }
     /**
     Gets major of user.
@@ -120,22 +162,23 @@ public class User implements Serializable {
      */
     public void setMajor(String major) {
         this.major = major;
-        firebase.child("users").child(email.replace("@", "").replace(".", "")).child("major").setValue(major);
+        firebase.child(TABLE).child(email.replace("@", "").replace(".", "")).child("major").setValue(major);
     }
     /**
      Checks whether the user is an admin.
+     @return whether current user is locked.
      */
     public Boolean isLocked() {
-        return isLocked;
+        return locked;
     }
     /**
      * unlocks user account after bad login attempts
      */
     public void unlock() {
         badLoginAttempts = 0;
-        isLocked = false;
-        firebase.child("users").child(parseEmail(email)).child("isLocked").setValue(false);
-        firebase.child("users").child(parseEmail(email)).child("badLoginAttempts").setValue(0);
+        locked = false;
+        firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(false);
+        firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(0);
     }
     /**
      * Reset bad login attempts
@@ -143,7 +186,7 @@ public class User implements Serializable {
     public void restoreLoginAttempts() {
 
         badLoginAttempts = 0;
-        firebase.child("users").child(parseEmail(email)).child("badLoginAttempts").setValue(0);
+        firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(0);
     }
     /**
      * Count a new bad login attempt
@@ -151,9 +194,9 @@ public class User implements Serializable {
     public void newBadLoginAttempt() {
         //TODO badLoginAttempts not changing
         badLoginAttempts += 1;
-        isLocked = badLoginAttempts > 3;
-        firebase.child("users").child(parseEmail(email)).child("isLocked").setValue(badLoginAttempts);
-        firebase.child("users").child(parseEmail(email)).child("badLoginAttempts").setValue(isLocked);
+        locked = badLoginAttempts > SWIGGUMS;
+        firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(badLoginAttempts);
+        firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(locked);
     }
 
     /**
@@ -161,21 +204,27 @@ public class User implements Serializable {
      * @return whether user is banned
      */
     public Boolean isBanned() {
-        return isBanned && !isAdmin();
+        return banned && !isAdmin();
     }
     /**
      Sets unlocks user account
+     @param b whether User is banned or not.
      */
     public void setIsBanned(Boolean b) {
 
-        isBanned = b;
-        firebase.child("users").child(parseEmail(email)).child("isBanned").setValue(isBanned);
+        banned = b;
+        firebase.child(TABLE).child(parseEmail(email)).child("isBanned").setValue(banned);
     }
     /**
      Checks whether the user is an admin.
+     @return whether user is admin
      */
-    public Boolean isAdmin() { return isAdmin; }
+    public Boolean isAdmin() { return admin; }
 
+    /**
+     * Returns a string representation of user.
+     * @return string representation of user.
+     */
     public String toString() {
         String toStr = getEmail() + " is";
 

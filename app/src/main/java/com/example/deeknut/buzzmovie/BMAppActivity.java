@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 
 import com.example.deeknut.buzzmovie.models.Model;
 import com.example.deeknut.buzzmovie.models.User;
-import com.firebase.client.Firebase;
 
 public class BMAppActivity extends BMModelActivity {
 
@@ -21,7 +20,7 @@ public class BMAppActivity extends BMModelActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmapp);
 
-        Button logoutButton = (Button) findViewById(R.id.logout_button);
+        final Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -29,7 +28,7 @@ public class BMAppActivity extends BMModelActivity {
             }
         });
 
-        Button editProfileButton = (Button) findViewById(R.id.button_edit_profile);
+        final Button editProfileButton = (Button) findViewById(R.id.button_edit_profile);
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,7 +36,7 @@ public class BMAppActivity extends BMModelActivity {
             }
         });
 
-        Button searchButton = (Button) findViewById(R.id.button_search);
+        final Button searchButton = (Button) findViewById(R.id.button_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +44,7 @@ public class BMAppActivity extends BMModelActivity {
             }
         });
 
-        Button recButton = (Button) findViewById(R.id.button_rec);
+        final Button recButton = (Button) findViewById(R.id.button_rec);
         recButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,14 +52,13 @@ public class BMAppActivity extends BMModelActivity {
             }
         });
 
-        Model m = getModel();
-        User u  = m.getCurUser();
+        final Model m = getModel();
+        final User u  = m.getCurUser();
         if (u.isAdmin()) {
-            RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
+            final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
 
-            Button manageUsersBt = new Button(this);
+            final Button manageUsersBt = new Button(this);
             manageUsersBt.setText("Manage Users");
-            //manageUsersBt.setLayoutParams(new RelativeLayout.LayoutParams(?));
             manageUsersBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -75,7 +73,7 @@ public class BMAppActivity extends BMModelActivity {
      * Attempts to go to edit profile screen
      */
     private void attemptEditProfile() {
-        Intent editProfileIntent = new Intent(this, BMProfileActivity.class);
+        final Intent editProfileIntent = new Intent(this, BMProfileActivity.class);
         startActivity(editProfileIntent);
         finish();
     }
@@ -84,7 +82,7 @@ public class BMAppActivity extends BMModelActivity {
      * Attempts to go to search screen
      */
     private void attemptGoToSearchPage() {
-        Intent searchIntent = new Intent(this, BMSearchActivity.class);
+        final Intent searchIntent = new Intent(this, BMSearchActivity.class);
         startActivity(searchIntent);
         //finish();
     }
@@ -93,7 +91,7 @@ public class BMAppActivity extends BMModelActivity {
      * Attempts to logout, going back to the welcome screen
      */
     private void attemptLogout() {
-        Intent welcomeScreenIntent = new Intent(this, BMLoginActivity.class);
+        final Intent welcomeScreenIntent = new Intent(this, BMLoginActivity.class);
         startActivity(welcomeScreenIntent);
         finish();
     }
@@ -102,7 +100,7 @@ public class BMAppActivity extends BMModelActivity {
      * Attempts to go to recommendation page
      */
     private void attemptGoToRecPage() {
-        Intent recActivityIntent = new Intent(this, BMRecommendationsActivity.class);
+        final Intent recActivityIntent = new Intent(this, BMRecommendationsActivity.class);
         startActivity(recActivityIntent);
     }
 
@@ -110,7 +108,7 @@ public class BMAppActivity extends BMModelActivity {
      * Attempts to go to the Manage Users page
      */
     private void attemptGoToManageUsers() {
-        Intent manageUsersIntent = new Intent(this, BMManageUsersActivity.class);
+        final Intent manageUsersIntent = new Intent(this, BMManageUsersActivity.class);
         startActivity(manageUsersIntent);
     }
 }

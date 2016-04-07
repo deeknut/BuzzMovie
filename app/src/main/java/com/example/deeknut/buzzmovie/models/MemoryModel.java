@@ -7,7 +7,6 @@ package com.example.deeknut.buzzmovie.models;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,17 +14,26 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MemoryModel implements Model {
+public final class MemoryModel implements Model {
 
     /** The collection of users, movies, and recs, keyed by name.
      * Currently our structurers.*/
     private Map<String, User> users;
+    /**
+     *
+     */
     private Map<String, Movie> movies;
+    /**
+     *
+     */
     private Map<String, Recommendation> recommendations;
     /**
     Current user and singleton object for MemoryModel.
      */
     private User currUser;
+    /**
+     *
+     */
     private static Model singleton;
     /**
      * Makes a new model
@@ -37,18 +45,22 @@ public class MemoryModel implements Model {
     }
 
     @Override
-     public boolean checkUser(final String email, final String password) {
-        User s = users.get(email);
+    public boolean checkUser(final String email, final String password) {
+        final User s = users.get(email);
         return s != null && password.equals(s.getPass());
     }
 
     @Override
     public boolean isUser(final String email) {
-        User s = users.get(email);
+        final User s = users.get(email);
         return s != null;
     }
 
-    public ArrayList<User> listUsers() {
+    /**
+     * Returns all users in memory as list.
+     * @return all users as a list in memory.
+     */
+    public List<User> listUsers() {
         return new ArrayList<>(users.values());
     }
 
@@ -67,10 +79,10 @@ public class MemoryModel implements Model {
 
     @Override
     public List<Recommendation> getRecommendationsByMajor(String major) {
-        List<Recommendation> list = new ArrayList<>();
-        for(Recommendation rec : recommendations.values()) {
+        final List<Recommendation> list = new ArrayList<>();
+        for(final Recommendation rec : recommendations.values()) {
             Log.d("Email", rec.getUserEmail());
-            if (major.equals("All Majors") ||
+            if ("All Majors".equals(major) ||
                     major.equals(getUserByEmail(rec.getUserEmail()).getMajor())) {
                 list.add(rec);
             }
@@ -127,6 +139,10 @@ public class MemoryModel implements Model {
         }
     }
 
+    /**
+     * Gets current model instance. This is a singleton class method.
+     * @return this instance, either current or instantiated.
+     */
     public static Model getInstance() {
         if(singleton == null) {
             singleton = new MemoryModel();

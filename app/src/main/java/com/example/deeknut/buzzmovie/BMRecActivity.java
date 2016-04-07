@@ -13,11 +13,21 @@ import com.example.deeknut.buzzmovie.models.User;
 
 public class BMRecActivity extends BMModelActivity {
 
-    private Recommendation recommendation;
+    /**
+     *
+     */
     private RatingBar rating;
-    private TextView title;
+    /**
+     *
+     */
     private TextView desc;
+    /**
+     *
+     */
     private Movie movie;
+    /**
+     *
+     */
     private User user;
 
     @Override
@@ -27,10 +37,13 @@ public class BMRecActivity extends BMModelActivity {
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Recommendation recommendation;
+        TextView title;
+
         setContentView(R.layout.activity_rec);
         movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
         user = (User) getIntent().getSerializableExtra("DAT_USER_DOE");
-        Boolean isEditable = getIntent().getBooleanExtra("isEditable", false);
+        final Boolean isEditable = getIntent().getBooleanExtra("isEditable", false);
         recommendation = getModel().getRecommendationByUserAndMovie(user, movie);
         title = (TextView)findViewById(R.id.title);
         desc = (TextView)findViewById(R.id.desc);
@@ -43,7 +56,7 @@ public class BMRecActivity extends BMModelActivity {
         desc.setEnabled(isEditable);
         rating.setIsIndicator(!isEditable);
 
-        Button saveButton = (Button) findViewById(R.id.save_button);
+        final Button saveButton = (Button) findViewById(R.id.save_button);
         if(!isEditable) {
             saveButton.setText("Back");
         }

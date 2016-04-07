@@ -4,22 +4,18 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.app.ProgressDialog;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,9 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.deeknut.buzzmovie.models.User;
-import com.firebase.client.Firebase;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,21 +39,59 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<Cursor> {
 
     /**
-     * Id to identity READ_CONTACTS permission request.
+     * ID to identify if contacts can be read.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    public static String currentUser;
+    /**
+     *
+     */
+    private static String currentUser;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
-    // UI references.
+    /**
+     * UI for email entry.
+     */
     private AutoCompleteTextView mEmailView;
+    /**
+     *
+     */
     private EditText mPasswordView;
+    /**
+     *
+     */
     private View mProgressView;
+    /**
+     *
+     */
     private View mLoginFormView;
-    public Intent appScreenIntent;
+    /**
+     *
+     */
+    private Intent appScreenIntent;
+    /**
+     *
+     */
+    private static final int PASSWORD_LENGTH = 3;
+
+
+    /**
+     * Gets current user.
+     * @return current user
+     */
+    public static String getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * Sets current user of application.
+     * @param currUser of application
+     */
+    public static void setCurrentUser(String currUser) {
+        BMLoginActivity.currentUser = currUser;
+    }
 
     /**
      * {@inheritDoc}
@@ -86,7 +118,7 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        final Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +126,7 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
             }
         });
 
-        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+        final Button mRegisterButton = (Button) findViewById(R.id.register_button);
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +142,7 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
      * Jumps to register view
      */
     private void goToRegister() {
-        Intent registerScreenIntent = new Intent(this, BMRegisterActivity.class);
+        final Intent registerScreenIntent = new Intent(this, BMRegisterActivity.class);
         startActivity(registerScreenIntent);
         finish();
     }
@@ -158,10 +190,9 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
+        if (requestCode == REQUEST_READ_CONTACTS &&
+               grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            populateAutoComplete();
         }
     }
 
@@ -172,17 +203,14 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -195,7 +223,7 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
         }
 
         // Check for an account lock
-        User user = getModel().getUserByEmail(email);
+        final User user = getModel().getUserByEmail(email);
         if (user != null && user.isLocked()) {
             mEmailView.setError(getString(R.string.error_locked_account));
             focusView = mEmailView;
@@ -230,7 +258,7 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
             // perform the user login attempt.
             //showProgress(true);
             currentUser = email;
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, this, mPasswordView);
             mAuthTask.execute((Void) null);
         }
     }
@@ -250,7 +278,7 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
      * Checks if password is valid
      */
     private boolean isPasswordValid(String password) {
-        return password.length() > 3;
+        return password.length() > PASSWORD_LENGTH;
     }
 
     /**
@@ -258,30 +286,32 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            final int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    }
                 }
-            });
+            );
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    }
                 }
-            });
+            );
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
@@ -299,12 +329,13 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
         return new CursorLoader(this,
                 // Retrieve data rows for the device user's 'profile' contact.
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.getProjection(),
 
                 // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
+                ContactsContract.Contacts.Data.MIMETYPE + " = ?",
+                    new String[]{
+                        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE
+                    },
 
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
@@ -317,10 +348,10 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
      */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
+        final List<String> emails = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
+            emails.add(cursor.getString(ProfileQuery.getAddress()));
             cursor.moveToNext();
         }
 
@@ -341,111 +372,17 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
     */
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
+        final ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(BMLoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
     }
 
-    /**
-     * Interface for profile queries
-     */
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-        private ProgressDialog progressDialog;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        /**
-         * {@inheritDoc}
-         * Runs check in background of task
-         */
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return getModel().checkUser(mEmail, mPassword);
-        }
-
-        /**
-         * {@inheritDoc}
-         * Goes to application view or shows error dialog based on credentials
-         */
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success && progressDialog.isShowing()) {
-                Log.d("Process", "Process finished.");
-                getModel().setCurUser(mEmail, mPassword);
-                getModel().getUserByEmail(mEmail).restoreLoginAttempts();
-                startActivity(appScreenIntent);
-                finish();
-            } else {
-                if(!success) {
-                    User u = getModel().getUserByEmail(mEmail);
-                    if (u != null) { u.newBadLoginAttempt(); }
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                }
-                mPasswordView.requestFocus();
-                progressDialog.dismiss();
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         * Show progress dialog before task execution
-         */
-        @Override
-        protected void onPreExecute(){
-            progressDialog = new ProgressDialog(BMLoginActivity.this);
-            progressDialog.setMessage("Logging in...");
-
-            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener(){
-                // Set a click listener for progress dialog cancel button
-                @Override
-                public void onClick(DialogInterface dialog, int which){
-                    // dismiss the progress dialog
-                    dialog.dismiss();
-                }
-            });
-            progressDialog.show();
-        }
-
-        /**
-         * {@inheritDoc}
-         * Cancel task when cancel button clicked
-         */
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 }
 

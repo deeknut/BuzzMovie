@@ -6,14 +6,30 @@ import java.io.Serializable;
  * Created by Jay on 2/28/16.
  */
 public class Movie implements Serializable {
+    /**
+     *
+     */
     private double rating;
+    /**
+     *
+     */
     private String title;
+    /**
+     *
+     */
     private String description;
+    /**
+     *
+     */
     private String id;
+    /**
+     *
+     */
     private int counter;
 
     /**
     Constructor for movie.
+    @param movieID of movie from RottenTomatoes
     @param title of movie
     @param description of movie
     @param rating of movie

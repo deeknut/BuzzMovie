@@ -26,13 +26,34 @@ import org.json.JSONObject;
  */
 public class BMSearchActivity extends BMModelActivity {
 
-    private final String baseUrl ="http://api.rottentomatoes.com/api/public/v1.0/";
-    private final String apiParam = "?apikey=yedukp76ffytfuy24zsqk7f5";
+    /**
+     *
+     */
+    private static final String BASEURL = "http://api.rottentomatoes.com/api/public/v1.0/";
+    /**
+     *
+     */
+    private static final String APIPARAM = "?apikey=yedukp76ffytfuy24zsqk7f5";
+    /**
+     *
+     */
     private RequestQueue queue;
+    /**
+     *
+     */
     private ListView results;
+    /**
+     *
+     */
     private EditText searchInput;
-    Movie[] movieTitles;
-    Intent movieScreenIntent;
+    /**
+     *
+     */
+    private Movie[] movieTitles;
+    /**
+     *
+     */
+    private Intent movieScreenIntent;
 
     /**
      * {@inheritDoc}
@@ -48,7 +69,7 @@ public class BMSearchActivity extends BMModelActivity {
         results = (ListView) findViewById(R.id.results_listView);
         searchInput = (EditText) findViewById(R.id.editText_search);
 
-        Button recentMoviesButton = (Button) findViewById(R.id.button_recent_movies);
+        final Button recentMoviesButton = (Button) findViewById(R.id.button_recent_movies);
         recentMoviesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,7 +77,7 @@ public class BMSearchActivity extends BMModelActivity {
             }
         });
 
-        Button recentDvdsButton = (Button) findViewById(R.id.button_recent_dvds);
+        final Button recentDvdsButton = (Button) findViewById(R.id.button_recent_dvds);
         recentDvdsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +85,7 @@ public class BMSearchActivity extends BMModelActivity {
             }
         });
 
-        Button searchButton = (Button) findViewById(R.id.button_search);
+        final Button searchButton = (Button) findViewById(R.id.button_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,67 +127,74 @@ public class BMSearchActivity extends BMModelActivity {
     /**
      * Shows Rotten Tomato API results in results list view
      * @param endpoint endpoint to grab Rotten Tomatoes API data from
-     * @param params parameters to Rotten Tomatoes API
+     * @param paramsOG parameters to Rotten Tomatoes API
      */
-    private void showApiResults(String endpoint, String params) {
+    private void showApiResults(String endpoint, String paramsOG) {
         this.removeSearchInputFocus();
-        params = params.replaceAll(" ", "%20");
+        final String params = paramsOG.replaceAll(" ", "%20");
 
-        String url = baseUrl + endpoint + apiParam + params;
+        final String url = BASEURL + endpoint + APIPARAM + params;
 
-        JsonObjectRequest jsonRequest = new JsonObjectRequest (url, null,
-                    new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONArray movies = response.getJSONArray("movies");
-                    int moviesSize = movies.length();
-                    ArrayAdapter adapter;
-                    if (moviesSize > 0) {
-                        movieTitles = new Movie[moviesSize];
-                        for (int i = 0; i < moviesSize; i++) {
-                            JSONObject movie = movies.getJSONObject(i);
-                            if(!getModel().hasMovie(movie.getString("id"))) {
-                               getModel().addMovie(movie.getString("id"), movie.getString("title"),
-                                       movie.getString("synopsis"),
-                                       movie.getJSONObject("ratings").getInt("critics_score") / 20.0);
-
-                            }
-                            movieTitles[i] = getModel().getMovieById(movie.getString("id"));
-                            Log.d("MOVIEEE", movie.toString());
-                        }
-                        adapter = new ArrayAdapter<>(BMSearchActivity.this,
-                                android.R.layout.simple_list_item_1, movieTitles);
-                    } else {
-                        String[] noMovieTitles = {"No movies found"};
-                        adapter = new ArrayAdapter<>(BMSearchActivity.this,
-                                android.R.layout.simple_list_item_1, noMovieTitles);
-                    }
-
-                    // save results to results listView
-                    results.setAdapter(adapter);
-                    results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            movieScreenIntent.putExtra("DAT_MOVIE_DOE", movieTitles[position]);
-                            startActivity(movieScreenIntent);
-                            //Intent intent = new Intent(new MovieActivity(movieTitles[position]));
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        final JsonObjectRequest jsonRequest = new JsonObjectRequest (url, null,
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    addApiResults(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("Exception", error.getMessage());
                 }
             }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
+        );
         queue.add(jsonRequest);
     }
+
+    /**
+     * Adds API results to movies array.
+     * @param response JSON response passed in because checkstyle was being annoying
+     */
+    private void addApiResults(JSONObject response) {
+        try {
+            final JSONArray movies = response.getJSONArray("movies");
+            final int moviesSize = movies.length();
+            ArrayAdapter adapter;
+            if (moviesSize > 0) {
+                movieTitles = new Movie[moviesSize];
+                for (int i = 0; i < moviesSize; i++) {
+                    final JSONObject movie = movies.getJSONObject(i);
+                    final double scale = 20.0;
+                    if(!getModel().hasMovie(movie.getString("id"))) {
+                        getModel().addMovie(movie.getString("id"), movie.getString("title"),
+                                movie.getString("synopsis"),
+                                movie.getJSONObject("ratings").getInt("critics_score") / scale);
+
+                    }
+                    movieTitles[i] = getModel().getMovieById(movie.getString("id"));
+                }
+                adapter = new ArrayAdapter<>(BMSearchActivity.this,
+                        android.R.layout.simple_list_item_1, movieTitles);
+            } else {
+                final String[] noMovieTitles = {"No movies found"};
+                adapter = new ArrayAdapter<>(BMSearchActivity.this,
+                        android.R.layout.simple_list_item_1, noMovieTitles);
+            }
+
+            // save results to results listView
+            results.setAdapter(adapter);
+            results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    movieScreenIntent.putExtra("DAT_MOVIE_DOE", movieTitles[position]);
+                    startActivity(movieScreenIntent);
+                }
+            });
+        } catch (JSONException e) {
+            Log.d("Exception", e.getMessage());
+        }
+    }
+
     /**
     Closing actions after search is implemented.
      */

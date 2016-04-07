@@ -11,7 +11,13 @@ import android.widget.TextView;
 import com.example.deeknut.buzzmovie.models.Movie;
 
 public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRatingBarChangeListener {
+    /**
+     *
+     */
     private Movie movie;
+    /**
+     *
+     */
     private RatingBar rating;
     /**
      * {@inheritDoc}
@@ -23,16 +29,16 @@ public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRati
         setContentView(R.layout.activity_movie);
         movie = (Movie) getIntent().getSerializableExtra("DAT_MOVIE_DOE");
         Log.d("MovieActivity", movie.toString());
-        TextView title = (TextView)findViewById(R.id.title);
+        final TextView title = (TextView)findViewById(R.id.title);
         title.setText(movie.getTitle());
-        TextView desc = (TextView)findViewById(R.id.desc);
+        final TextView desc = (TextView)findViewById(R.id.desc);
         desc.setText(movie.getDescription());
 
         rating = (RatingBar)findViewById(R.id.rating);
         rating.setRating((float) movie.getRating());
         rating.setOnRatingBarChangeListener(this);
 
-        Button backButton = (Button) findViewById(R.id.back_button);
+        final Button backButton = (Button) findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,7 +46,7 @@ public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRati
             }
         });
 
-        Button recButton = (Button) findViewById(R.id.rec_button);
+        final Button recButton = (Button) findViewById(R.id.rec_button);
         recButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +58,7 @@ public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRati
     Goes back to movie search screen.
      */
     private void goBackToSearch() {
-        Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
+        final Intent searchScreenIntent = new Intent(this, BMSearchActivity.class);
         startActivity(searchScreenIntent);
         finish();
     }
@@ -61,10 +67,9 @@ public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRati
      * Called when rating is changed for a ratingBar.
      */
     @Override
-    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+    public void onRatingChanged(RatingBar ratingBar, float ratingVal, boolean fromUser) {
         if(fromUser) {
-            Log.d("tag", "" + rating);
-            movie.updateRating(rating);
+            movie.updateRating(ratingVal);
             getModel().addMovie(movie.getMovieID(), movie.getTitle(), movie.getDescription(), movie.getRating());
             this.rating.setRating((float) movie.getRating());
         }
@@ -73,7 +78,7 @@ public class BMMovieActivity extends BMModelActivity implements RatingBar.OnRati
     Goes to recommendation update screen when recommendation button is clicked.
      */
     private void onRecClicked() {
-        Intent updateRecIntent = new Intent(this, BMRecActivity.class);
+        final Intent updateRecIntent = new Intent(this, BMRecActivity.class);
         updateRecIntent.putExtra("DAT_MOVIE_DOE", movie);
         updateRecIntent.putExtra("DAT_USER_DOE", getModel().getCurUser());
         Log.d("DAT_USER_DOE", getModel().getCurUser().toString());
