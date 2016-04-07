@@ -7,23 +7,23 @@ import java.io.Serializable;
  */
 public class Recommendation implements Serializable {
     /**
-     *
+     * field that holds the rating
      */
     private double rating;
     /**
-     *
+     * Field that holds the description
      */
     private String description;
     /**
-     *
+     * Field that holds the user's email
      */
     private String userEmail;
     /**
-     *
+     * Field that holds the title of the movie
      */
     private String movieTitle;
     /**
-     *
+     * Field that holds the movie ID
      */
     private String movieID;
 
