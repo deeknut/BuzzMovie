@@ -20,19 +20,19 @@ public final class MemoryModel implements Model {
      * Currently our structurers.*/
     private Map<String, User> users;
     /**
-     *
+     * MemoryModel for movies
      */
     private Map<String, Movie> movies;
     /**
-     *
+     * MemoryModel for recommendations
      */
     private Map<String, Recommendation> recommendations;
     /**
-    Current user and singleton object for MemoryModel.
+     * Current user and singleton object for MemoryModel.
      */
     private User currUser;
     /**
-     *
+     * Singleton instance
      */
     private static Model singleton;
     /**
