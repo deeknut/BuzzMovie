@@ -14,7 +14,7 @@ import com.firebase.client.Firebase;
  */
 public abstract class BMModelActivity extends AppCompatActivity {
     /**
-     *
+     * Model private instance for DatabaseModel
      */
     private Model model;
     @Override
