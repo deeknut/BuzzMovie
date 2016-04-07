@@ -27,31 +27,31 @@ import org.json.JSONObject;
 public class BMSearchActivity extends BMModelActivity {
 
     /**
-     *
+     * field the holds the base URL
      */
     private static final String BASEURL = "http://api.rottentomatoes.com/api/public/v1.0/";
     /**
-     *
+     * Field that holds the API parameter
      */
     private static final String APIPARAM = "?apikey=yedukp76ffytfuy24zsqk7f5";
     /**
-     *
+     * Queue for the Request queue
      */
     private RequestQueue queue;
     /**
-     *
+     * ListView of the results
      */
     private ListView results;
     /**
-     *
+     * Editable text for the search input
      */
     private EditText searchInput;
     /**
-     *
+     * Array of movieTitles
      */
     private Movie[] movieTitles;
     /**
-     *
+     * Field that holds the movie screen intent
      */
     private Intent movieScreenIntent;
 
