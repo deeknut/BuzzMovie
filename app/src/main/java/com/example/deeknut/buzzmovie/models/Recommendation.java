@@ -97,4 +97,13 @@ public class Recommendation implements Serializable {
     public String getMovieID() {
         return movieID;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other == null) { return false; }
+        if(this == other) { return true; }
+        if(!(other instanceof Recommendation)) { return false; }
+        Recommendation that = (Recommendation) other;
+        return this.getRating() == that.getRating() && this.getUserEmail().equals(that.getUserEmail());
+    }
 }

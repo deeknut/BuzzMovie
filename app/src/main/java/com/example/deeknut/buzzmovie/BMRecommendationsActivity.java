@@ -92,4 +92,18 @@ public class BMRecommendationsActivity extends BMModelActivity {
         }
         return r;
     }
+
+    /**
+     * Gets recommendations for display.
+     * @param major to filter recommendations to display
+     * @return recommendations to display.
+     */
+    public Recommendation[] getLocalRecommendations(String major) {
+        final List<Recommendation> list = getMemoryModel().getRecommendationsByMajor(major);
+        r = new Recommendation[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            r[i] = list.get(i);
+        }
+        return r;
+    }
 }

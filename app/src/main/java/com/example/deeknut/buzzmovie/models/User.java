@@ -58,6 +58,10 @@ public class User implements Serializable {
      * This is swiggums
      */
     private static final int SWIGGUMS = 3;
+    /**
+     * boolean value that indicates whether to use firebase
+     */
+    private static boolean isLit = true;
 
     /**
      * Default constructor for user. Only used for unit testing.
@@ -81,6 +85,27 @@ public class User implements Serializable {
         //TODO change when we have a real admin account
         this.admin = "@dmin.".equals(email);
         firebase = new Firebase(BASEURL);
+    }
+
+    /** Constructor for user. Used for MemoryModel so firebase doesn't get instantiated
+     @param email for user
+     @param pass password for user
+     @param isLit if we using firebase
+     */
+    public User(String email, String pass, boolean isLit) {
+        this.email = email;
+        this.pass = pass;
+        this.major = "";
+        this.interests = "";
+        this.badLoginAttempts = 0;
+        this.locked = false;
+        this.banned = false;
+        //TODO change when we have a real admin account
+        this.admin = "@dmin.".equals(email);
+        this.isLit = isLit;
+        if(isLit) {
+            firebase = new Firebase(BASEURL);
+        }
     }
 
     /**
@@ -162,7 +187,9 @@ public class User implements Serializable {
      */
     public void setMajor(String major) {
         this.major = major;
-        firebase.child(TABLE).child(email.replace("@", "").replace(".", "")).child("major").setValue(major);
+        if(isLit) {
+            firebase.child(TABLE).child(email.replace("@", "").replace(".", "")).child("major").setValue(major);
+        }
     }
     /**
      Checks whether the user is an admin.
@@ -177,8 +204,10 @@ public class User implements Serializable {
     public void unlock() {
         badLoginAttempts = 0;
         locked = false;
-        firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(false);
-        firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(0);
+        if(isLit) {
+            firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(false);
+            firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(0);
+        }
     }
     /**
      * Reset bad login attempts
@@ -186,7 +215,9 @@ public class User implements Serializable {
     public void restoreLoginAttempts() {
 
         badLoginAttempts = 0;
-        firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(0);
+        if(isLit) {
+            firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(0);
+        }
     }
     /**
      * Count a new bad login attempt
@@ -195,8 +226,10 @@ public class User implements Serializable {
         //TODO badLoginAttempts not changing
         badLoginAttempts += 1;
         locked = badLoginAttempts > SWIGGUMS;
-        firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(badLoginAttempts);
-        firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(locked);
+        if(isLit) {
+            firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(badLoginAttempts);
+            firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(locked);
+        }
     }
 
     /**
@@ -213,7 +246,9 @@ public class User implements Serializable {
     public void setIsBanned(Boolean b) {
 
         banned = b;
-        firebase.child(TABLE).child(parseEmail(email)).child("isBanned").setValue(banned);
+        if(isLit) {
+            firebase.child(TABLE).child(parseEmail(email)).child("isBanned").setValue(banned);
+        }
     }
     /**
      Checks whether the user is an admin.

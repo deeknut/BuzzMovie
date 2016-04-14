@@ -1,5 +1,7 @@
 package com.example.deeknut.buzzmovie.models;
 
+import android.util.Log;
+
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -160,9 +162,10 @@ public final class DatabaseModel implements Model {
         Collections.sort(list, new Comparator<Recommendation>() {
             @Override
             public int compare(Recommendation r1, Recommendation r2) {
-                return (r1.getRating() - r2.getRating()) < 0 ? 1 : 0;
+                return (int) ((r2.getRating() - r1.getRating()) * 10);
             }
         });
+        Log.d("HERE!", "HEARAY");
         return list;
     }
 

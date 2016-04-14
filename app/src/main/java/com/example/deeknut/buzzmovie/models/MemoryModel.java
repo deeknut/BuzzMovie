@@ -90,9 +90,10 @@ public final class MemoryModel implements Model {
         Collections.sort(list, new Comparator<Recommendation>() {
             @Override
             public int compare(Recommendation r1, Recommendation r2) {
-                return (r1.getRating() - r2.getRating()) < 0 ? 1 : 0;
+                return (int)((r2.getRating() - r1.getRating()) * 10);
             }
         });
+        Log.d("HERE!", "HEARAY");
         return list;
     }
 
@@ -134,7 +135,7 @@ public final class MemoryModel implements Model {
         if(isUser(email)) {
             currUser = users.get(email);
         } else {
-            currUser = new User(email, pass);
+            currUser = new User(email, pass, false);
             users.put(email, currUser);
         }
     }
