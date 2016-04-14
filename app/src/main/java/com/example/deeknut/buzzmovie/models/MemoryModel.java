@@ -98,6 +98,21 @@ public final class MemoryModel implements Model {
     }
 
     @Override
+    public List<Recommendation> getAllRecommendations() {
+        final List<Recommendation> list = new ArrayList<>();
+        for(final Recommendation rec : recommendations.values()) {
+            list.add(rec);
+        }
+        Collections.sort(list, new Comparator<Recommendation>() {
+            @Override
+            public int compare(Recommendation r1, Recommendation r2) {
+                return (r1.getRating() - r2.getRating()) < 0 ? 1 : 0;
+            }
+        });
+        return list;
+    }
+
+    @Override
     public void addMovie(final String id, final String title, final String description, double rating) {
         movies.put(id, new Movie(id, title, description, rating));
     }

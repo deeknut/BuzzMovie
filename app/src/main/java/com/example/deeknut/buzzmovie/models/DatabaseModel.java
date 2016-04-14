@@ -170,6 +170,11 @@ public final class DatabaseModel implements Model {
     }
 
     @Override
+    public List<Recommendation> getAllRecommendations() {
+        return (List<Recommendation>) recommendations.values();
+    }
+
+    @Override
     public void addMovie(final String id, final String title, final String description, double rating) {
         movies.put(id, new Movie(id, title, description, rating));
         firebase.child("movies").child(id).setValue(new Movie(id, title, description, rating));

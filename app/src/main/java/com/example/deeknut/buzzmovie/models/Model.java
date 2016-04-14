@@ -111,6 +111,12 @@ public interface Model {
     List<Recommendation> getRecommendationsByMajor(String major);
 
     /**
+     * Gets all the recommendations
+     * @return recommendations
+     */
+    List<Recommendation> getAllRecommendations();
+
+    /**
      * Returns an array list of all users in system
      * @return a list of users
      */

@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.deeknut.buzzmovie.models.Movie;
 import com.example.deeknut.buzzmovie.models.Recommendation;
 
 import java.util.List;
