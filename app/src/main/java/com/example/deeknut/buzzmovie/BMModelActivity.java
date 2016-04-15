@@ -29,6 +29,10 @@ public abstract class BMModelActivity extends AppCompatActivity {
      * @return model with saved information.
      */
     public Model getModel() {
+        if(model == null) {
+            //MemoryModel for testing purposes
+            model = MemoryModel.getInstance();
+        }
         return model;
     }
 

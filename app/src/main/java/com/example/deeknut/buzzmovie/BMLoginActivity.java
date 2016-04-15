@@ -222,29 +222,9 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for an account lock
-        final User user = getModel().getUserByEmail(email);
-        if (user != null && user.isLocked()) {
-            mEmailView.setError(getString(R.string.error_locked_account));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        // Check for an account ban
-        if (user != null && user.isBanned()) {
-            mEmailView.setError(getString(R.string.error_banned_account));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+        int err = provideEmailLoginError(email);
+        if(err != -1 && !getString(err).isEmpty()) {
+            mEmailView.setError(getString(err));
             focusView = mEmailView;
             cancel = true;
         }
@@ -261,6 +241,32 @@ public class BMLoginActivity extends BMModelActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password, this, mPasswordView);
             mAuthTask.execute((Void) null);
         }
+    }
+
+    /**
+     * Provide email login errors for application.
+     * @param email to check for potential login errors.
+     * @return error associated with potential email problem.
+     */
+    public int provideEmailLoginError(String email) {
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email) || email.isEmpty()) {
+            return R.string.error_field_required;
+        } else if (!isEmailValid(email)) {
+            return R.string.error_invalid_email;
+        }
+
+        // Check for an account lock
+        final User user = getModel().getUserByEmail(email);
+        if (user != null && user.isLocked()) {
+            return R.string.error_locked_account;
+        }
+        // Check for an account ban
+        if (user != null && user.isBanned()) {
+            return R.string.error_banned_account;
+        }
+        return -1;
     }
 
     /**

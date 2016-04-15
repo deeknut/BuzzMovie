@@ -12,7 +12,7 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Created by Jayanth Devanathan on 4/4/16.
  */
-public class GetRecsTest extends BMModelActivity {
+public class GetRecommendationsByMajorTest extends BMModelActivity {
 
     @Test
     public void testGetRecsSort() {

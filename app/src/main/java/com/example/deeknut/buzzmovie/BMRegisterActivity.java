@@ -192,36 +192,18 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
 
         boolean cancel = false;
         View focusView = null;
-
-        // Check if passwords match
-        if (!password.equals(confirmPassword)) {
-            mPasswordView.setError(getString(R.string.error_non_matching_password));
+        int err = provideEmailError(email);
+        if(err != -1 && !getString(err).isEmpty()) {
+            mEmailView.setError(getString(err));
+            focusView = mEmailView;
+            cancel = true;
+        }
+        err = providePassError(password, confirmPassword);
+        if(err != -1 && !getString(err).isEmpty()) {
+            mPasswordView.setError(getString(err));
             focusView = mPasswordView;
             cancel = true;
         }
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (getModel().isUser(email)) {
-            mEmailView.setError(getString(R.string.error_pre_existing_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
         if (cancel) {
             // There was an error; don't attempt register and focus the first
             // form field with an error.
@@ -235,6 +217,44 @@ public class BMRegisterActivity extends BMModelActivity implements LoaderCallbac
             mAuthTask = new UserRegisterTask(email, password, this, mPasswordView);
             mAuthTask.execute((Void) null);
         }
+    }
+
+    /**
+     * Provides required errors for email input.
+     * @param email for which to find errors
+     * @return error ID for particular email, -1 if no error
+     */
+    public int provideEmailError(String email) {
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email) || email.isEmpty()) {
+            return R.string.error_field_required;
+        } else if (!isEmailValid(email)) {
+            return R.string.error_invalid_email;
+        } else if (getModel().isUser(email)) {
+            return R.string.error_pre_existing_email;
+        }
+        return -1;
+    }
+
+    /**
+     * Provides required errors for all password input.
+     * @param password input for error
+     * @param confirmPassword input for error
+     * @return error ID for particular password, -1 if no error
+     */
+    public int providePassError(String password, String confirmPassword) {
+
+        // Check if passwords match
+        if (!password.equals(confirmPassword)) {
+            return R.string.error_non_matching_password;
+        }
+
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            return R.string.error_invalid_password;
+        }
+        return -1;
     }
 
     /**

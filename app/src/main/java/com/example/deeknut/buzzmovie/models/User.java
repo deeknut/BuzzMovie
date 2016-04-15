@@ -172,7 +172,9 @@ public class User implements Serializable {
     public void setInterests(String interests) {
         this.interests = interests;
         Log.d("SETTING INTERESTS", "DOPLSKDJFL");
-        firebase.child(TABLE).child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
+        if(isLit) {
+            firebase.child(TABLE).child(email.replace("@", "").replace(".", "")).child("interests").setValue(interests);
+        }
     }
     /**
     Gets major of user.
