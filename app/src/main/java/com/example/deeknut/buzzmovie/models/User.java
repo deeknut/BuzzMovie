@@ -229,8 +229,8 @@ public class User implements Serializable {
         badLoginAttempts += 1;
         locked = badLoginAttempts > SWIGGUMS;
         if(isLit) {
-            firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(badLoginAttempts);
-            firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(locked);
+            firebase.child(TABLE).child(parseEmail(email)).child("isLocked").setValue(locked);
+            firebase.child(TABLE).child(parseEmail(email)).child("badLoginAttempts").setValue(badLoginAttempts);
         }
     }
 

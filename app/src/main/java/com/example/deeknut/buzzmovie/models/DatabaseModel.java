@@ -96,7 +96,7 @@ public final class DatabaseModel implements Model {
                 Log.d("USER MAJOR", map.get("major").toString());
                 users.put(userSnap.getKey(), new User(userSnap.getKey(), (String) map.get("pass"),
                         map.get("interests").toString(), map.get("major").toString(),
-                        (boolean) map.get("banned")));
+                        (boolean) map.get("isBanned")));
             }
         } else if("movies".equals(snapshot.getKey())) {
             for (final DataSnapshot userSnap : snapshot.getChildren()) {
