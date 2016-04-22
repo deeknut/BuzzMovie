@@ -91,6 +91,9 @@ public final class DatabaseModel implements Model {
         if("users".equals(snapshot.getKey())) {
             for (final DataSnapshot userSnap : snapshot.getChildren()) {
                 final Map map = (Map) userSnap.getValue();
+                Log.d("USER KEY", userSnap.getKey());
+                Log.d("USER INTEREST", map.get("interests").toString());
+                Log.d("USER MAJOR", map.get("major").toString());
                 users.put(userSnap.getKey(), new User(userSnap.getKey(), (String) map.get("pass"),
                         map.get("interests").toString(), map.get("major").toString(),
                         (boolean) map.get("banned")));
@@ -98,15 +101,16 @@ public final class DatabaseModel implements Model {
         } else if("movies".equals(snapshot.getKey())) {
             for (final DataSnapshot userSnap : snapshot.getChildren()) {
                 final Map map = (Map) userSnap.getValue();
+                Log.d("RATING", map.get("rating").toString());
                 movies.put(userSnap.getKey(), new Movie(userSnap.getKey(), (String) map.get("title"),
-                        map.get("description").toString(), (double) map.get("rating")));
+                        map.get("description").toString(), Double.parseDouble(map.get("rating").toString())));
             }
         } else if("recommendations".equals(snapshot.getKey())) {
             for (final DataSnapshot userSnap : snapshot.getChildren()) {
                 final Map map = (Map) userSnap.getValue();
                 recommendations.put(userSnap.getKey(), new Recommendation(map.get("userEmail").toString(),
                         map.get("movieID").toString(), map.get("title").toString(), map.get("description").toString(),
-                        (double) map.get("rating")));
+                        Double.parseDouble(map.get("rating").toString())));
             }
         }
     }
@@ -184,14 +188,14 @@ public final class DatabaseModel implements Model {
     public void addRecommendation(final String userEmail, final String movieID, final String movieTitle,
                                   final String description, double rating) {
         //recommendations.put(userEmail + ":" + movieID, new Recommendation(userEmail, movieID, movieTitle, description, rating));
-        firebase.child("recommendations").child(userEmail + ":" + movieID).
+        firebase.child("recommendations").child(parseEmail(userEmail) + ":" + movieID).
                 setValue(new Recommendation(userEmail, movieID, movieTitle, description, rating));
     }
 
     @Override
     public void addRecommendation(final String userEmail, Movie movie) {
         //recommendations.put(userEmail + ":" + movieID, new Recommendation(userEmail, movieID, movieTitle, description, rating));
-        firebase.child("recommendations").child(userEmail + ":" + movie.getMovieID()).
+        firebase.child("recommendations").child(parseEmail(userEmail) + ":" + movie.getMovieID()).
                 setValue(new Recommendation(userEmail, movie.getMovieID(), movie.getTitle(),
                         movie.getDescription(), movie.getRating()));
     }
